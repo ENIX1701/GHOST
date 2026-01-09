@@ -232,14 +232,19 @@ public:
     }
 
     bool registerGhost() {
+        std::cout << "[GHOST] trying to register with SHADOW\n";
         // TODO: request the registration in SHADOW
         // TODO: ideally get back some sort of a config, but for now just get success code
         return false; 
     }
 
     void beacon() {
+        std::cout << "[GHOST] starting the beacon\n";
+
         while (true) {
             // TODO: beaconing logic
+            std::cout << "[beacon] pulse sent\n";
+            
             sleep(5 * SLEEP_MULTIPLIER);
         }
     }
