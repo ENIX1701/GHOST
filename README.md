@@ -40,6 +40,19 @@ GHOST is a standalone implant that can be run on Windows and Linux systems. I've
 4. Main Ghost class is somewhat abstract. It would be possible (and even a good practice, but firstly I want to see it work) to create an interace and then a separate implementation, so that it's possible to swap out different components (food for thought for later parametrization)
 5. Overall this is very low level in comparison to JavaScript or Python way of doing it, but it's a priceless learning experience
 
+### Code
+
+#### Terminal output
+
+Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `src/utils.hpp` instead of raw `std::cout`.
+
+|Symbol|Meaning |Macro                 |Usage case examples                                                       |
+|------|--------|----------------------|--------------------------------------------------------------------------|
+|`[+]` |Success |`LOG_SUCCESS(message)`|Task completed, persistence established, file downloaded                  |
+|`[-]` |Error   |`LOG_ERROR(message)`  |Connection lost, persmission denied, file not found, server not responding|
+|`[*]` |Info    |`LOG_INFO(message)`   |SHADOW connection, sleep time, beacon info                                |
+|`[!]` |Alert   |`LOG_ALERT(message)`  |Hex dumps, raw payloads, critical errors                                  |
+
 ## How to run
 
 ### Production

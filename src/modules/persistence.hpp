@@ -1,15 +1,15 @@
 #ifndef PERSISTENCE_HPP
 #define PERSISTENCE_HPP
 
-#include <iostream>
 #include <cstdlib>
+
 #include "../utils.hpp"
 
 namespace Persistence {
     int bashrc() {
         const char* homeEnv = std::getenv("HOME");
         if (homeEnv == nullptr) {
-            std::cout << "SYS ERR no $HOME\n";
+            LOG_ERROR("Couldn't find $HOME")
             return 1;
         }
 
@@ -20,7 +20,7 @@ namespace Persistence {
             return 0;
         }
 
-        std::cout << "SYS ERR cant append/no file\n";
+        LOG_ERROR("Error appending payload {} to file {}", payload, path)
         return -1;
     }
 }

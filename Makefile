@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++23
+CXXFLAGS = -std=c++23 -Wall -O2
 
 OUTPUT_DIR = bin
 SRC_DIR = src
@@ -11,6 +11,9 @@ SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
 
 all: $(TARGET)
+
+debug: CXXFLAGS += -DDEBUG
+debug: clean all
 
 $(TARGET): $(OBJECTS)
 	@echo "Linking..."
