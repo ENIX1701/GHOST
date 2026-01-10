@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <unistd.h>
 #include <fstream>
+#include <filesystem>
 
 #define POPEN popen
 #define PCLOSE pclose
@@ -204,10 +205,20 @@ namespace Utils {
 
     // === FILE UTILS ===
     bool appendToFile(const std::string& filepath, const std::string& lineToAppend) {
-        std::fstream file(filepath, std::ios::in | std::ios::out | std::ios::ate);
+        std::fstream file(filepath, std::ios::in | std::ios::out);
 
         if (file.is_open()) {
-            file << lineToAppend << "\n";
+            std::string line;
+
+            while (std::getline(file, line)) {
+                if (line.find(lineToAppend) != std::string::npos) {
+                    return true;
+                }
+            }
+
+            file.clear();
+            
+            file << "\n" << lineToAppend << "\n";
             file.close();
 
             return true;

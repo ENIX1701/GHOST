@@ -66,7 +66,11 @@ In v1.0 GHOSTs will be served by the `/file` endpoint by [SHODOW](https://github
 
 ### Development
 
-Firstly, build the project in DEBUG mode using Make:
+Development should be conducted on the DEBUG version. The DEBUG version:
+- Produces console output
+- Uses dummy files instead of infecting real ones (for example persistence is set up in `.test` instead of `.bashrc`)
+
+To build the project in DEBUG mode run:
 ```bash
 make -DDEBUG -B     # -B flag to force rebuild every time
 ```
@@ -81,7 +85,8 @@ After the code is built, move the file located in `bin/GHOST` into an authorized
 - [x] MVP (core beacon loop; connect -> get task -> execute -> send data back -> sleep)
 - [x] network -> basic network connectivity (consider raw sockets or HTTP)
 - [x] persistence -> either add a run key or a .lnk in startup
-- [ ] stealth -> jitter for network comms, maybe some source obfuscation or (if very bored) polymorphism?
+- [x] stealth -> jitter for network comms
+- [ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?
 
 ## Legal
 
