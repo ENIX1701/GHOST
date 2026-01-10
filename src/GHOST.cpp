@@ -76,7 +76,7 @@ public:
                 pendingResults.clear();
 
                 HeartbeatResponseDto instructions = HeartbeatResponseDto::fromJson(rawResponse);
-                LOG_INFO("Received config with {}s sleep interval, {} jitter \% and {} tasks", instructions.sleepInterval, instructions.jitterPercent, instructions.tasks.size())
+                LOG_INFO("Received config with {}s sleep interval, {}\% jitter and {} tasks", instructions.sleepInterval, instructions.jitterPercent, instructions.tasks.size())
 
                 if (instructions.sleepInterval > 0) {
                     currentSleepInterval = instructions.sleepInterval;
