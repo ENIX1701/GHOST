@@ -23,6 +23,13 @@ I've anticipated that GHOST will cause some problems. Its main role is to de-fac
 
 So, going forward: GHOST will be a **LINUX-ONLY** implant. But, because it was meant to be multi-platform (and it isn't), it will implement broader functionality. This means that it will, for now, try to: establish persistence on a system, beacon and wait for commands, execute them and send back data. It's a bit more advanced than what I was planning on with the multi-platform version, but since it's focused on a single OS, it'll be interesting to test out. I would also love to make this configurable and parametrizable (so that you could potentially use CHARON to generate a GHOST with a particular persistence option, with no beaconing, and with only data-exfiltration mechanism, for example :)). I believe this will more than make up for the lack of Windows version. This is what I'll be pivoting GHOST to. Expect a lot of refactoring in the near future...
 
+## SCRATCHPAD
+
+The README's getting dirty, but it'll be redone once the fully-featured MVP is ready.
+
+What will be changed in the linux version:
+- [ ] refactor code to use linux-native mechanisms. no more macros!! (that's a lie, but macros will be used to parametrize mechanisms during compilation -> future CHARON builder integration)
+- [ ] persistence through... (look this up)
 
 ## Architecture
 
