@@ -1,13 +1,13 @@
 # GHOST
 
-GHOST is an implant for AETHER deployed to victim Linux and Windows hosts.
+GHOST is an implant for AETHER deployable to victim Linux hosts.
 
 ## Overview
 **Role:** Run on target machine and execute commands remotely  
-**Platforms:** Windows, Linux  
+**Platforms:** Linux  
 **Idea:** Beacons poll the server every X seconds (possibly jittered to [obfuscate](https://attack.mitre.org/techniques/T1001/) the traffic).  
 
-## Capabilities:
+## Capabilities
 - Establish persistence
 - Execute shell commands
 - Data exfiltration
@@ -28,8 +28,8 @@ So, going forward: GHOST will be a **LINUX-ONLY** implant. But, because it was m
 The README's getting dirty, but it'll be redone once the fully-featured MVP is ready.
 
 What will be changed in the linux version:
-- [ ] refactor code to use linux-native mechanisms. no more macros!! (that's a lie, but macros will be used to parametrize mechanisms during compilation -> future CHARON builder integration)
-- [ ] persistence through... (look this up)
+- [x] refactor code to use linux-native mechanisms. no more macros!! (that's a lie, but macros will be used to parametrize mechanisms during compilation -> future CHARON builder integration)
+- [x] persistence through... .bashrc for now. will add more shells later
 
 ## Architecture
 
@@ -46,24 +46,29 @@ GHOST is a standalone implant that can be run on Windows and Linux systems. I've
 
 Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `src/utils.hpp` instead of raw `std::cout`.
 
-|Symbol|Meaning |Macro                 |Usage case examples                                                       |
-|------|--------|----------------------|--------------------------------------------------------------------------|
-|`[+]` |Success |`LOG_SUCCESS(message)`|Task completed, persistence established, file downloaded                  |
-|`[-]` |Error   |`LOG_ERROR(message)`  |Connection lost, persmission denied, file not found, server not responding|
-|`[*]` |Info    |`LOG_INFO(message)`   |SHADOW connection, sleep time, beacon info                                |
-|`[!]` |Alert   |`LOG_ALERT(message)`  |Hex dumps, raw payloads, critical errors                                  |
+|Symbol|Meaning |Macro              |Usage case examples                                                       |
+|------|--------|-------------------|--------------------------------------------------------------------------|
+|`[+]` |Success |`LOG_SUCCESS(...)` |Task completed, persistence established, file downloaded                  |
+|`[-]` |Error   |`LOG_ERROR(...)`   |Connection lost, persmission denied, file not found, server not responding|
+|`[*]` |Info    |`LOG_INFO(...)`    |SHADOW connection, sleep time, beacon info                                |
+|`[!]` |Alert   |`LOG_ALERT(...)`   |Hex dumps, raw payloads, critical errors                                  |
 
 ## How to run
 
 ### Production
 
-> TODO
+Production build is achieved by running:
+```bash
+make
+```
+
+In v1.0 GHOSTs will be served by the `/file` endpoint by [SHODOW](https://github.com/ENIX1701/SHADOW).
 
 ### Development
 
-Firstly, build the project using Make:
+Firstly, build the project in DEBUG mode using Make:
 ```bash
-make -B     # -B flag to force rebuild every time
+make -DDEBUG -B     # -B flag to force rebuild every time
 ```
 
 After the code is built, move the file located in `bin/GHOST` into an authorized Linux system and run it with:
@@ -73,9 +78,9 @@ After the code is built, move the file located in `bin/GHOST` into an authorized
 
 ## TODO
 
-- [ ] MVP (core beacon loop; connect -> get task -> execute -> sleep)
-- [ ] network -> basic network connectivity (consider raw sockets or HTTP)
-- [ ] persistence -> either add a run key or a .lnk in startup
+- [x] MVP (core beacon loop; connect -> get task -> execute -> send data back -> sleep)
+- [x] network -> basic network connectivity (consider raw sockets or HTTP)
+- [x] persistence -> either add a run key or a .lnk in startup
 - [ ] stealth -> jitter for network comms, maybe some source obfuscation or (if very bored) polymorphism?
 
 ## Legal
