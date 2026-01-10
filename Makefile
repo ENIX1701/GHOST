@@ -1,9 +1,11 @@
 CXX = g++
 CXXFLAGS = -std=c++17
 
-TARGET = GHOST
+OUTPUT_DIR = bin
 SRC_DIR = src
 BUILD_DIR = build
+
+TARGET = $(OUTPUT_DIR)/GHOST
 
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
@@ -12,6 +14,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	@echo "Linking..."
+	@mkdir -p $(OUTPUT_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 	@echo "Build complete: ./$(TARGET)"
 
