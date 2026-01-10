@@ -42,7 +42,21 @@ GHOST is a standalone implant that can be run on Windows and Linux systems. I've
 
 ## How to run
 
+### Production
+
 > TODO
+
+### Development
+
+Firstly, build the project using Make:
+```bash
+make -B     # -B flag to force rebuild every time
+```
+
+After the code is built, move the file located in `bin/GHOST` into an authorized Linux system and run it with:
+```bash
+./GHOST
+```
 
 ## TODO
 

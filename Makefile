@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17
+CXXFLAGS = -std=c++23
 
 OUTPUT_DIR = bin
 SRC_DIR = src

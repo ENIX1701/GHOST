@@ -8,6 +8,7 @@
 #include <memory>
 #include <algorithm>
 #include <unistd.h>
+#include <fstream>
 
 #define POPEN popen
 #define PCLOSE pclose
@@ -45,6 +46,8 @@ namespace Utils {
 
     // TODO: code from https://antonz.org/uuidv7/#cpp by Anton Zhiyanov
     // TODO: modified to return string instead
+    // SOLUTION: put the UUID as a file in some obscure user-writeable directory
+    // SOLUTION: and check whether or not it's present before generating a new one
     std::string generateUuid() {
         return "test-ghost-1";
     }
@@ -182,6 +185,20 @@ namespace Utils {
         objects.push_back(jsonArray);
 
         return objects;
+    }
+
+    // === FILE UTILS ===
+    bool appendToFile(const std::string& filepath, const std::string& lineToAppend) {
+        std::fstream file(filepath, std::ios::in | std::ios::out | std::ios::ate);
+
+        if (file.is_open()) {
+            file << lineToAppend << "\n";
+            file.close();
+
+            return true;
+        }
+
+        return false;
     }
 }
 
