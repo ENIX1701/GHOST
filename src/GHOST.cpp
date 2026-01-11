@@ -108,7 +108,8 @@ private:
         result.taskId = task.id;
 
         result.output = Utils::executeCommand(task.command + " " + task.args);
-        result.status = "completed";
+        result.status = TaskStatus::Done;
+        LOG_SUCCESS("Task {} executed with output: {}", task.command, result.output)
         
         pendingResults.push_back(result);
     }

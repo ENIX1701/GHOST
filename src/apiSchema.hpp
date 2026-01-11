@@ -8,6 +8,24 @@
 
 #include "utils.hpp"
 
+// === ENUMS ===
+enum class TaskStatus {
+    Pending,
+    Sent,
+    Done,
+    Failed
+};
+
+inline std::string taskStatusToString(TaskStatus status) {
+    switch (status) {
+        case TaskStatus::Pending: return "pending";
+        case TaskStatus::Sent: return "sent";
+        case TaskStatus::Done: return "done";
+        case TaskStatus::Failed: return "failed";
+        default: return "unknown";
+    } 
+}
+
 // === REQUEST DTOs ===
 struct GhostDto {
     std::string id;
@@ -29,14 +47,14 @@ struct GhostDto {
 
 struct TaskResultDto {
     std::string taskId;
-    std::string status;
+    TaskStatus status;
     std::string output;
 
     std::string toJson() const {
         std::stringstream json;
         json << "{"
             << "\"task_id\":\"" << taskId << "\","
-            << "\"status\":\"" << status << "\","
+            << "\"status\":\"" << taskStatusToString(status) << "\","
             << "\"output\":\"" << Utils::jsonEscape(output) << "\""
             << "}";
 

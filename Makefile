@@ -20,6 +20,7 @@ $(TARGET): $(OBJECTS)
 	@mkdir -p $(OUTPUT_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 	@echo "Build complete: ./$(TARGET)"
+	rm -rf $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(BUILD_DIR)
@@ -27,6 +28,6 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 clean:
 	@echo "Cleaning..."
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR) $(OUTPUT_DIR)
 
 .PHONY: all clean
