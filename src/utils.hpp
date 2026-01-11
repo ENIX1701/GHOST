@@ -226,6 +226,35 @@ namespace Utils {
 
         return false;
     }
+
+    bool removeFromFile(const std::string& filepath, const std::string& lineToRemove) {
+        std::vector<std::string> lines;
+        std::ifstream input(filepath);
+
+        if (!input.is_open()) {
+            return false;
+        }
+        
+        std::string line;
+        while (std::getline(input, line)) {
+            if (line.find(lineToRemove) == std::string::npos) {
+                lines.push_back(line);
+            }
+        }
+        input.close();
+
+        std::ofstream output(filepath, std::ios::trunc);
+        if (!output.is_open()) {
+            return false;
+        }
+
+        for (const auto& l : lines) {
+            output << l << "\n";
+        }
+        output.close();
+        
+        return true;
+    }
 }
 
 #endif
