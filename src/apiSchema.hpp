@@ -37,8 +37,7 @@ struct GhostDto {
         json << "{"
             << "\"id\":\"" << id << "\","
             << "\"hostname\":\"" << Utils::jsonEscape(hostname) << "\","
-            << "\"os\":\"" << os << "\","
-            << "\"last_seen\":0"
+            << "\"os\":\"" << os << "\""
             << "}";
 
         return json.str();
