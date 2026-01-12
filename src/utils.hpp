@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <filesystem>
+#include <random>
 
 #define POPEN popen
 #define PCLOSE pclose
@@ -65,7 +66,43 @@ namespace Utils {
     // SOLUTION: put the UUID as a file in some obscure user-writeable directory
     // SOLUTION: and check whether or not it's present before generating a new one
     std::string generateUuid() {
-        return "test-ghost-1";
+        std::string raw(16, '\0');
+
+        // random bytes
+        std::random_device rd;
+        std::generate(raw.begin(), raw.end(), [&rd]() {
+            return static_cast<char>(rd());
+        });
+
+        // current timestamp in ms
+        auto now = std::chrono::system_clock::now();
+        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(
+            now.time_since_epoch()
+        ).count();
+
+        // timestamp
+        raw[0] += (millis >> 40) & 0xFF;
+        raw[1] += (millis >> 32) & 0xFF;
+        raw[2] += (millis >> 24) & 0xFF;
+        raw[3] += (millis >> 16) & 0xFF;
+        raw[4] += (millis >> 8) & 0xFF;
+        raw[5] += millis & 0xFF;
+
+        // version and variant
+        raw[6] += (raw[6] & 0x0F) | 0x70;
+        raw[8] += (raw[8] & 0x3F) | 0x80;
+
+        std::stringstream ss;
+        ss << std::hex << std::setfill('0');
+        for (int i = 0; i < 16; i++) {
+            if (i == 4 || i == 6 || i == 8 || i == 10) {
+                ss << '-';
+            }
+
+            ss << std::setw(2) << static_cast<int>(static_cast<unsigned char>(raw[i]));
+        }
+
+        return ss.str();
     }
 
     // === JSON UTILS ===
@@ -206,7 +243,6 @@ namespace Utils {
     // === FILE UTILS ===
     bool appendToFile(const std::string& filepath, const std::string& lineToAppend) {
         std::fstream file(filepath, std::ios::in | std::ios::out);
-
         if (file.is_open()) {
             std::string line;
 
@@ -230,7 +266,6 @@ namespace Utils {
     bool removeFromFile(const std::string& filepath, const std::string& lineToRemove) {
         std::vector<std::string> lines;
         std::ifstream input(filepath);
-
         if (!input.is_open()) {
             return false;
         }
@@ -254,6 +289,46 @@ namespace Utils {
         output.close();
         
         return true;
+    }
+
+    bool encryptFile(const std::string& filepath) {
+        const std::string key = "GHOST_ENCRYPTION_KEY_EXAMPLE";
+        constexpr size_t CHUNK_SIZE = 4096;
+
+        std::filesystem::path pathObj(filepath);
+        if (!std::filesystem::exists(pathObj)) {
+            LOG_ERROR("file doesnt exist {}", filepath)
+            return false;
+        }
+        
+        std::fstream file(pathObj, std::ios::binary | std::ios::in | std::ios::out);
+        if (!file.is_open()) {
+            LOG_ERROR("failed to open file {}", filepath)
+            return false;
+        }
+
+        std::vector<char> buffer(CHUNK_SIZE);
+
+        file.read(buffer.data(), CHUNK_SIZE);
+        std::streamsize bytesRead = file.gcount();
+
+        if (bytesRead == 0) {
+            LOG_ALERT("FILE WAS EMPTY")
+            return false;
+        }
+
+        std::span<char> dataSpan(buffer.data(), bytesRead);
+        size_t keyLen = key.length();
+
+        for (size_t i = 0; i < dataSpan.size(); i++) {
+            dataSpan[i] ^= key[i % keyLen];
+        }
+
+        file.clear();
+        file.seekp(0, std::ios::beg);
+        file.write(dataSpan.data(), dataSpan.size());
+
+        return file.good();
     }
 }
 

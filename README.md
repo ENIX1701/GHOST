@@ -72,7 +72,7 @@ Development should be conducted on the DEBUG version. The DEBUG version:
 
 To build the project in DEBUG mode run:
 ```bash
-make -DDEBUG -B     # -B flag to force rebuild every time
+make debug
 ```
 
 After the code is built, move the file located in `bin/GHOST` into an authorized Linux system and run it with:
@@ -87,6 +87,8 @@ After the code is built, move the file located in `bin/GHOST` into an authorized
 - [x] persistence -> either add a run key or a .lnk in startup
 - [x] stealth -> jitter for network comms
 - [ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?
+- [ ] CREATE SCENARIO MODE THAT LETS YOU CREATE AND TEST DIFFERENT THREATS (for example ransomware, infostealer, etc.) -> I think this will bring tremendous value to the project:
+    - [ ] constructed from ready-made modules (lists of objects from namespace -> check how to do it)
 
 ## Legal
 

