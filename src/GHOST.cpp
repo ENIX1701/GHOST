@@ -9,7 +9,6 @@
 #include "httpClient.hpp"
 #include "utils.hpp"
 
-#include "modules/escalation.hpp"
 #include "modules/exfiltration.hpp"
 #include "modules/impact.hpp"
 #include "modules/persistence.hpp"

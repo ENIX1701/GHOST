@@ -89,6 +89,7 @@ After the code is built, move the file located in `bin/GHOST` into an authorized
 - [ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?
 - [ ] CREATE SCENARIO MODE THAT LETS YOU CREATE AND TEST DIFFERENT THREATS (for example ransomware, infostealer, etc.) -> I think this will bring tremendous value to the project:
     - [ ] constructed from ready-made modules (lists of objects from namespace -> check how to do it)
+    - [ ] maybe track ttp (module function names) as Mitre codes?
 
 ## Legal
 
