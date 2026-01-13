@@ -31,6 +31,12 @@ What will be changed in the linux version:
 - [x] refactor code to use linux-native mechanisms. no more macros!! (that's a lie, but macros will be used to parametrize mechanisms during compilation -> future CHARON builder integration)
 - [x] persistence through... .bashrc for now. will add more shells later
 
+### REFACTOR
+
+- [ ] interface for all modules
+- [ ] ditch low level sockets, high level is good enough and a lot easier to maintain
+- [ ] parametrized compilation (with/without certain modules) -> setup for TODO CHARON functionality
+
 ## Architecture
 
 GHOST is a standalone implant that can be run on Windows and Linux systems. I've decided that, since I have some networking basics, I'll try to implement some very basic raw HTTP over sockets. It's not as difficult as it sounds, but there are a few things that need to be taken into consideration:
