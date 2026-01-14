@@ -73,6 +73,8 @@ In v1.0 GHOSTs will be served by the `/file` endpoint by [SHODOW](https://github
 
 ### Development
 
+[More detailed guide](CMAKE.md)
+
 Development should be conducted on the DEBUG version. The DEBUG version:
 - Produces console output
 - Uses dummy files instead of infecting real ones (for example persistence is set up in `.test` instead of `.bashrc`)

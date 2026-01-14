@@ -2,15 +2,18 @@
 #include "utils/Logger.hpp"
 #include "utils/CryptoUtils.hpp"
 #include "utils/FileUtils.hpp"
+#include "utils/SystemUtils.hpp"
 
-void EncryptionMethod::trigger() {
-    auto file = FileUtils::ListFilesRecursively(SystemUtils::GetUserHome());
+bool EncryptionMethod::trigger() {
+    auto files = FileUtils::ListFilesRecursively(SystemUtils::GetUserHome());
 
     for (const auto& file : files) {
         LOG_INFO("Encrypting {}", file)
     }
+
+    return true;
 }
 
-void EncryptionMethod::restore() {
-    
+bool EncryptionMethod::restore() {
+    return true;
 }

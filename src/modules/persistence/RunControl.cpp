@@ -1,6 +1,8 @@
 #include "modules/persistence/RunControl.hpp"
 #include "utils/Logger.hpp"
 #include "utils/FileUtils.hpp"
+#include "utils/SystemUtils.hpp"
+#include <filesystem>
 
 // TODO: add one-and-done option -> one successful rc persistence and return
 // TODO: track all files where persistence was established and remove only from them (less noisy than iterating over all again)

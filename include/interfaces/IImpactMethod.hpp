@@ -5,6 +5,6 @@ class IImpactMethod {
 public:
     virtual ~IImpactMethod() = default;
     virtual std::string getName() const = 0;
-    virtual void trigger() = 0;
-    virtual void restore() = 0;
+    virtual bool trigger() = 0;
+    virtual bool restore() = 0;
 };
