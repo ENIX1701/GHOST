@@ -1,8 +1,7 @@
 #include "modules/Impact.hpp"
 #include "utils/Logger.hpp"
 
-#ifdef METHOD_ENCRYPT
-    #include "modules/impact/Encryption.cpp"
+#ifdef METHOD_ENCRYPT // make encryption a nested manager to allow different encryption methods
     #include "modules/impact/Encryption.hpp"
 #endif
 #ifdef METHOD_WIPE

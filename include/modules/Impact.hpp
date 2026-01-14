@@ -1,6 +1,6 @@
 #pragma once
-#include "interface/IModule.hpp"
-#include "interface/IImpactMethod.hpp"
+#include "interfaces/IModule.hpp"
+#include "interfaces/IImpactMethod.hpp"
 #include <vector>
 #include <memory>
 
@@ -10,6 +10,6 @@ private:
 public:
     Impact();
     std::string getName() const override { return "Impact"; }
-    bool execute(const std::string& arg = "") override;
+    bool execute(const std::string& args = "") override;
     void restore();
 };

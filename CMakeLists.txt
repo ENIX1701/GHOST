@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
-project(GHOST_IMPLANT)
+project(GHOST)
 
 set(CMAKE_CXX_STANDARD 20)
 
 # === DEPENDENCIES ===
 include(FetchContent)
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git GIT_TAG 1.14.x)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git GIT_TAG 1.14.1)
 FetchContent_MakeAvailable(cpr)
 
 # === GLOBAL FLAGS ===
