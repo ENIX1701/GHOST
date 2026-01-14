@@ -48,7 +48,7 @@ bool RunControlMethod::install() {
         LOG_ERROR("[SUMMARY] Failed to infect any rc files")
     }
 
-    return !(successCount > 0);
+    return successCount > 0;
 }
 
 bool RunControlMethod::remove() {

