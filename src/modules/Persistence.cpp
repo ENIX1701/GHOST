@@ -44,3 +44,6 @@ bool Persistence::execute(const std::string& args) {
 
     return anySuccess;
 }
+
+// TODO
+void Persistence::restore() {}

@@ -11,4 +11,5 @@ public:
     Exfiltration();
     std::string getName() const override { return "Exfiltration"; }
     bool execute(const std::string& args = "") override;
+    void restore() override;
 };

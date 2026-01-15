@@ -34,3 +34,6 @@ bool Exfiltration::execute(const std::string& args) {
 
     return successCount;
 }
+
+// can't really restore exfiltration, so just an empty function for now
+void Exfiltration::restore() {}

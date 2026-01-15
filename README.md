@@ -34,8 +34,8 @@ What will be changed in the linux version:
 ### REFACTOR
 
 - [x] interface for all modules
-- [ ] ditch low level sockets, high level is good enough and a lot easier to maintain
-- [ ] parametrized compilation (with/without certain modules) -> setup for TODO CHARON functionality
+- [x] ditch low level sockets, high level is good enough and a lot easier to maintain
+- [x] parametrized compilation (with/without certain modules) -> setup for TODO CHARON functionality
 - [ ] unify log format (if/how/where to put module names in logs, etc.)
 
 ## Architecture
@@ -51,7 +51,7 @@ GHOST is a standalone implant that can be run on Linux systems. I've decided tha
 
 #### Terminal output
 
-Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `src/utils.hpp` instead of raw `std::cout`.
+Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `include/utils/Logger.hpp` instead of raw `std::cout`.
 
 |Symbol|Meaning |Macro              |Usage case examples                                                       |
 |------|--------|-------------------|--------------------------------------------------------------------------|
@@ -62,32 +62,7 @@ Terminal output should be structured in accordance to the below guidelines. The 
 
 ## How to run
 
-### Production
-
-Production build is achieved by running:
-```bash
-make
-```
-
-In v1.0 GHOSTs will be served by the `/file` endpoint by [SHODOW](https://github.com/ENIX1701/SHADOW).
-
-### Development
-
-[More detailed guide](CMAKE.md)
-
-Development should be conducted on the DEBUG version. The DEBUG version:
-- Produces console output
-- Uses dummy files instead of infecting real ones (for example persistence is set up in `.test` instead of `.bashrc`)
-
-To build the project in DEBUG mode run:
-```bash
-make debug
-```
-
-After the code is built, move the file located in `bin/GHOST` into an authorized Linux system and run it with:
-```bash
-./GHOST
-```
+[Detailed guide](CMAKE.md)
 
 ## TODO
 
@@ -95,7 +70,7 @@ After the code is built, move the file located in `bin/GHOST` into an authorized
 - [x] network -> basic network connectivity (consider raw sockets or HTTP)
 - [x] persistence -> either add a run key or a .lnk in startup
 - [x] stealth -> jitter for network comms
-- [ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?
+- ~~[ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?~~
 - [ ] CREATE SCENARIO MODE THAT LETS YOU CREATE AND TEST DIFFERENT THREATS (for example ransomware, infostealer, etc.) -> I think this will bring tremendous value to the project:
     - [ ] constructed from ready-made modules (lists of objects from namespace -> check how to do it)
     - [ ] maybe track ttp (module function names) as Mitre codes?

@@ -6,4 +6,5 @@ public:
     virtual ~IModule() = default;
     virtual std::string getName() const = 0;
     virtual bool execute(const std::string& args = "") = 0;
+    virtual void restore() = 0;
 };

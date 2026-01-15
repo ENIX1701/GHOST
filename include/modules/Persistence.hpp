@@ -13,4 +13,5 @@ public:
     Persistence();
     std::string getName() const override { return "Persistence"; }
     bool execute(const std::string& args = "") override;
+    void restore() override;
 };

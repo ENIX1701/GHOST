@@ -41,5 +41,6 @@ public:
     bool reg();
     bool persist();
     bool beacon();
+    void cleanup();
     void destroy();
 };

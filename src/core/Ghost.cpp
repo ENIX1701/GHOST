@@ -130,6 +130,7 @@ void Ghost::processTask(const json& task) {
         status = TaskStatus::Done;
     } else if (command == "STOP_HAUNT") {   // ideally we'd want to reverse simulation artifacts
         LOG_ALERT("GOODBYE")                // but for now it's bening enough to warrant not doing that
+        cleanup();
         destroy();                          // TODO: think about IModule->reverse() and compiling that only in debug
         exit(0);
     }
@@ -166,6 +167,12 @@ void Ghost::sleepWithJitter() {
 
     LOG_INFO("Sleeping for {}s", finalSleep)
     std::this_thread::sleep_for(std::chrono::seconds(finalSleep));
+}
+
+void Ghost::cleanup() {
+    for (const auto& [_, module] : modules) {
+        module->restore();
+    }
 }
 
 void Ghost::destroy() {

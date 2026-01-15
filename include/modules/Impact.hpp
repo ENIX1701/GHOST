@@ -11,5 +11,5 @@ public:
     Impact();
     std::string getName() const override { return "Impact"; }
     bool execute(const std::string& args = "") override;
-    void restore();
+    void restore() override;
 };
