@@ -190,6 +190,9 @@ void Ghost::run() {
 
     while (true) {
         beacon();
-        sleepWithJitter();
+
+        if (this->pendingResults.empty()) {
+            sleepWithJitter();
+        }
     }
 }
