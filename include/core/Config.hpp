@@ -8,5 +8,7 @@ namespace Config {
     constexpr int DEFAULT_SLEEP_SEC = 5;
     constexpr int DEFAULT_JITTER_PERCENT = 10;
 
-    const std::string ENCRYPTION_KEY = "GHOST_ENCRYPTION_KEY_EXAMPLE";
+    // const std::string ENCRYPTION_KEY = "GHOST_ENCRYPTION_KEY_EXAMPLE";
+    // add safeguard for now
+    const std::string ENCRYPTION_KEY = ""; // yes i've accidentally encrypted my WSL 
 };
