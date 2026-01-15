@@ -31,20 +31,27 @@ What will be changed in the linux version:
 - [x] refactor code to use linux-native mechanisms. no more macros!! (that's a lie, but macros will be used to parametrize mechanisms during compilation -> future CHARON builder integration)
 - [x] persistence through... .bashrc for now. will add more shells later
 
+### REFACTOR
+
+- [x] interface for all modules
+- [x] ditch low level sockets, high level is good enough and a lot easier to maintain
+- [x] parametrized compilation (with/without certain modules) -> setup for TODO CHARON functionality
+- [ ] unify log format (if/how/where to put module names in logs, etc.)
+
 ## Architecture
 
-GHOST is a standalone implant that can be run on Windows and Linux systems. I've decided that, since I have some networking basics, I'll try to implement some very basic raw HTTP over sockets. It's not as difficult as it sounds, but there are a few things that need to be taken into consideration:
+GHOST is a standalone implant that can be run on Linux systems. I've decided that, since I have some networking basics, I'll try to implement some very basic raw HTTP over sockets. It's not as difficult as it sounds, but there are a few things that need to be taken into consideration:
 1. TCP vs UDP sockets -> most sensible solution would be to use TCP for any communication, where we expect a response (like registering into the SHADOW) and UDP when sending (so for data exfiltration) !!! THIS WAS COMPLETELY WRONG, sticking to TCP, as the server is a RESTful API
 2. Sockets are handled differently on Windows and Linux. This means that I'll need to use macros to define which libraries get compiled with which version. This is quite easy (and non-trivial at the same time!), but it's important to keep track of what's needed where
 3. JSON parsing will be done "manually", so it's important to implement necessary sanitization (to not "blow up" the implant, that'd be awkward)
 4. Main Ghost class is somewhat abstract. It would be possible (and even a good practice, but firstly I want to see it work) to create an interace and then a separate implementation, so that it's possible to swap out different components (food for thought for later parametrization)
-5. Overall this is very low level in comparison to JavaScript or Python way of doing it, but it's a priceless learning experience
+5. Overall this is very low level in comparison to JavaScript or Python way of doing it, but it's a priceless learning experience -> it was, but it's unmaintainable (and AV/EDR have tons of user mode hooks on low level networking libraries...), so migrating to more complete high-level implementation [learning experience is that in the future it would be a lot easier to create own very lightweight protocol instead of JSON over HTTP, but it's a TODO to think about]
 
 ### Code
 
 #### Terminal output
 
-Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `src/utils.hpp` instead of raw `std::cout`.
+Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `include/utils/Logger.hpp` instead of raw `std::cout`.
 
 |Symbol|Meaning |Macro              |Usage case examples                                                       |
 |------|--------|-------------------|--------------------------------------------------------------------------|
@@ -55,30 +62,7 @@ Terminal output should be structured in accordance to the below guidelines. The 
 
 ## How to run
 
-### Production
-
-Production build is achieved by running:
-```bash
-make
-```
-
-In v1.0 GHOSTs will be served by the `/file` endpoint by [SHODOW](https://github.com/ENIX1701/SHADOW).
-
-### Development
-
-Development should be conducted on the DEBUG version. The DEBUG version:
-- Produces console output
-- Uses dummy files instead of infecting real ones (for example persistence is set up in `.test` instead of `.bashrc`)
-
-To build the project in DEBUG mode run:
-```bash
-make debug
-```
-
-After the code is built, move the file located in `bin/GHOST` into an authorized Linux system and run it with:
-```bash
-./GHOST
-```
+[Detailed guide](CMAKE.md)
 
 ## TODO
 
@@ -86,7 +70,7 @@ After the code is built, move the file located in `bin/GHOST` into an authorized
 - [x] network -> basic network connectivity (consider raw sockets or HTTP)
 - [x] persistence -> either add a run key or a .lnk in startup
 - [x] stealth -> jitter for network comms
-- [ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?
+- ~~[ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?~~
 - [ ] CREATE SCENARIO MODE THAT LETS YOU CREATE AND TEST DIFFERENT THREATS (for example ransomware, infostealer, etc.) -> I think this will bring tremendous value to the project:
     - [ ] constructed from ready-made modules (lists of objects from namespace -> check how to do it)
     - [ ] maybe track ttp (module function names) as Mitre codes?
