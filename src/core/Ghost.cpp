@@ -96,8 +96,8 @@ bool Ghost::beacon() {
         if (response.contains("sleep_interval")) {
             this->sleepInterval = response["sleep_interval"].get<int>();
         }
-        if (response.contains("jitter")) {
-            this->sleepInterval = response["jitter"].get<int>();
+        if (response.contains("jitter_percent")) {
+            this->jitterPercent = response["jitter_percent"].get<int>();
         }
 
         if (response.contains("tasks") && response["tasks"].is_array()) {
