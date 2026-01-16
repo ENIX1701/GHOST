@@ -50,7 +50,7 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
 
 ## Contributing
 
-You're so cool :3 Head over to the [architecture](docs/ARCHITECTURE.md) section to get started! There are instructions on how to implement new modules and methods. When you're done, create a pull request and we'll polish your work and merge it into the main branch!
+You're so cool :3 Head over to the [architecture](docs/ARCHITECTURE.md) and [code guidelines](docs/CODE_GUIDELINES.md) sections to get started! There are instructions on how to implement new modules and methods. When you're done, create a pull request and we'll polish your work and merge it into the main branch!
 
 ## Legal
 
