@@ -46,11 +46,11 @@ Flags you can control:
 | `ENABLE_PERSISTENCE` | `ON` | Master switch for the Persistence module |
 | `PERSIST_RUNCONTROL` | `ON` | Infects `.bashrc`, `.zshrc`, etc. |
 | `PERSIST_SERVICE` | `OFF` | Installs a user-level Systemd service |
-| `PERSIST_CRON` | `OFF` | Installs a cron job (requires `CronJob.cpp`) |
+| `PERSIST_CRON` | `OFF` | Installs a cron job |
 | **Impact** |  |  |
 | `ENABLE_IMPACT` | `ON` | Master switch for the Impact module |
 | `IMPACT_ENCRYPT` | `ON` | Encrypts files in the home directory |
-| `IMPACT_WIPE` | `OFF` | Securely deletes files (requires `Wiper.cpp`) |
+| `IMPACT_WIPE` | `OFF` | Wipes drive |
 | **Exfiltration** |  |  |
 | `ENABLE_EXFIL` | `ON` | Master switch for the Exfiltration module |
 | `EXFIL_HTTP` | `ON` | Exfiltrates data via HTTP POST |

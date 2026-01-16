@@ -48,6 +48,10 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
     - [ ] Impact
 - [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example)
 
+## Contributing
+
+You're so cool :3 Head over to the [architecture](docs/ARCHITECTURE.md) section to get started! There are instructions on how to implement new modules and methods. When you're done, create a pull request and we'll polish your work and merge it into the main branch!
+
 ## Legal
 
 > **Disclaimer:** This software is for educational purposes and authorized red team engagements only. The authors are not responsible for misuse.
