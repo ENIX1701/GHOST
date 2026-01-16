@@ -1,6 +1,6 @@
-### Usage Guide
+# Build
 
-#### Basic build
+## Basic build
 
 This builds the agent with the default flags (`DEBUG`, `PERSISTENCE` (RunControl), `IMPACT` (Encryption), `EXFIL` (Http)).
 
@@ -13,7 +13,7 @@ make
 
 * **Result**: The executable will be at `build/bin/Ghost`.
 
-#### Parametrized build
+## Parametrized build
 
 You can turn features ON or OFF using the `-D` flag during the `cmake` step.
 
@@ -34,7 +34,7 @@ cmake -DIMPACT_WIPE=ON -DENABLE_PERSISTENCE=OFF ..
 make
 ```
 
-#### Available flags
+## Available flags
 
 Flags you can control:
 

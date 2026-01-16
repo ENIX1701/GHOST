@@ -1,80 +1,57 @@
+<img src="ghost-ascii.png" alt="GHOST" style="width: 100%;">
+
 # GHOST
 
-GHOST is an implant for AETHER deployable to victim Linux hosts.
+C++ implant for [AETHER](https://github.com/ENIX1701/AETHER) deployable to Linux hosts.
 
-## Overview
-**Role:** Run on target machine and execute commands remotely  
-**Platforms:** Linux  
-**Idea:** Beacons poll the server every X seconds (possibly jittered to [obfuscate](https://attack.mitre.org/techniques/T1001/) the traffic).  
+## Prerequisites
 
-## Capabilities
-- Establish persistence
-- Execute shell commands
-- Data exfiltration
-- Download (and execute) additional payloads
-- (maybe) Inject shellcode
+- `C++20`
+- `CMake` (`3.14+`)
+- `Make`
+- `cpr` and `nlohmann_json` (automatically fetched via *CMake*)
 
-## PROBLEM
+## Build locally
 
-Outlined in devlog: **tl;dr** is that Windows is treating this primitive implant as malware, which makes it difficult to run (you need to disable Defender or add an exclusion, it's not something I'd want the user to do). This forces me to rethink the core concept of the GHOST component.
+GHOST uses CMake for its build system. The compilation is highly parametrized and enables you to build an implant tailored exactly to your use case. For more information on that, please visit the [build guide](docs/BUILD.md).
 
-**Long version:**
-I've anticipated that GHOST will cause some problems. Its main role is to de-facto simulate an infection on a system, which, combined with how senstive EDR systems are nowadays, trips the behavioral safeguards put in place. What *I* think is happening in this particular instance is: the code uses low-level sockets (`winsock2.h` and `ws2tcpip.h` headers in Windows to be precise), which potentially triggers AV/EDR hooks. What would need to be done is as follows: all the code would need to be highly obfuscated and packed during or right after compilation. On top of that, the code itself would need to bypass EDR user-mode hooks, which means no high-level APIs AND using clever calling mechanisms (like `syscall` *JMP* to evade direct syscalls). These are, for the time being, WAY out of scope of this project. I have not planned on writing state-of-art malware simulation implants, I just wanted something to reliably test the other components.
+```bash
+# create and navigate to build directory
+mkdir build
+cd build
 
-So, going forward: GHOST will be a **LINUX-ONLY** implant. But, because it was meant to be multi-platform (and it isn't), it will implement broader functionality. This means that it will, for now, try to: establish persistence on a system, beacon and wait for commands, execute them and send back data. It's a bit more advanced than what I was planning on with the multi-platform version, but since it's focused on a single OS, it'll be interesting to test out. I would also love to make this configurable and parametrizable (so that you could potentially use CHARON to generate a GHOST with a particular persistence option, with no beaconing, and with only data-exfiltration mechanism, for example :)). I believe this will more than make up for the lack of Windows version. This is what I'll be pivoting GHOST to. Expect a lot of refactoring in the near future...
+# configure and build
+cmake ..
+make
+```
 
-## SCRATCHPAD
+The resulting executable will be located at `build/bin/Ghost`.
 
-The README's getting dirty, but it'll be redone once the fully-featured MVP is ready.
+## Deploy
 
-What will be changed in the linux version:
-- [x] refactor code to use linux-native mechanisms. no more macros!! (that's a lie, but macros will be used to parametrize mechanisms during compilation -> future CHARON builder integration)
-- [x] persistence through... .bashrc for now. will add more shells later
+To deploy a GHOST to the system of your choice (that you, of course, are authorized to test), just put the binary created in [build](#build-locally) step onto the Linux host and run it. 
 
-### REFACTOR
-
-- [x] interface for all modules
-- [x] ditch low level sockets, high level is good enough and a lot easier to maintain
-- [x] parametrized compilation (with/without certain modules) -> setup for TODO CHARON functionality
-- [ ] unify log format (if/how/where to put module names in logs, etc.)
+Production builds follow the same instructions as the [local builds](#build-locally), but usually use different flags, often to simulate certain scenarios. For more details on compilation flags visit the [build guide](docs/BUILD.md).
 
 ## Architecture
 
-GHOST is a standalone implant that can be run on Linux systems. I've decided that, since I have some networking basics, I'll try to implement some very basic raw HTTP over sockets. It's not as difficult as it sounds, but there are a few things that need to be taken into consideration:
-1. TCP vs UDP sockets -> most sensible solution would be to use TCP for any communication, where we expect a response (like registering into the SHADOW) and UDP when sending (so for data exfiltration) !!! THIS WAS COMPLETELY WRONG, sticking to TCP, as the server is a RESTful API
-2. Sockets are handled differently on Windows and Linux. This means that I'll need to use macros to define which libraries get compiled with which version. This is quite easy (and non-trivial at the same time!), but it's important to keep track of what's needed where
-3. JSON parsing will be done "manually", so it's important to implement necessary sanitization (to not "blow up" the implant, that'd be awkward)
-4. Main Ghost class is somewhat abstract. It would be possible (and even a good practice, but firstly I want to see it work) to create an interace and then a separate implementation, so that it's possible to swap out different components (food for thought for later parametrization)
-5. Overall this is very low level in comparison to JavaScript or Python way of doing it, but it's a priceless learning experience -> it was, but it's unmaintainable (and AV/EDR have tons of user mode hooks on low level networking libraries...), so migrating to more complete high-level implementation [learning experience is that in the future it would be a lot easier to create own very lightweight protocol instead of JSON over HTTP, but it's a TODO to think about]
+GHOST is a modular agent. It's easy to extend. For detailed information on its architecture, please visit the [architecture deep-dive](docs/ARCHITECTURE.md). Check out [code guidelines](docs/CODE_GUIDELINES.md) if you're more interested in implementation details.
 
-### Code
+## Roadmap
 
-#### Terminal output
-
-Terminal output should be structured in accordance to the below guidelines. The output should only be visible in `DEBUG` builds. Use wrapper macros provided in `include/utils/Logger.hpp` instead of raw `std::cout`.
-
-|Symbol|Meaning |Macro              |Usage case examples                                                       |
-|------|--------|-------------------|--------------------------------------------------------------------------|
-|`[+]` |Success |`LOG_SUCCESS(...)` |Task completed, persistence established, file downloaded                  |
-|`[-]` |Error   |`LOG_ERROR(...)`   |Connection lost, persmission denied, file not found, server not responding|
-|`[*]` |Info    |`LOG_INFO(...)`    |SHADOW connection, sleep time, beacon info                                |
-|`[!]` |Alert   |`LOG_ALERT(...)`   |Hex dumps, raw payloads, critical errors                                  |
-
-## How to run
-
-[Detailed guide](CMAKE.md)
-
-## TODO
-
-- [x] MVP (core beacon loop; connect -> get task -> execute -> send data back -> sleep)
-- [x] network -> basic network connectivity (consider raw sockets or HTTP)
-- [x] persistence -> either add a run key or a .lnk in startup
-- [x] stealth -> jitter for network comms
-- ~~[ ] stealth -> maybe some source obfuscation or (if very bored) polymorphism?~~
-- [ ] CREATE SCENARIO MODE THAT LETS YOU CREATE AND TEST DIFFERENT THREATS (for example ransomware, infostealer, etc.) -> I think this will bring tremendous value to the project:
-    - [ ] constructed from ready-made modules (lists of objects from namespace -> check how to do it)
-    - [ ] maybe track ttp (module function names) as Mitre codes?
+- [ ] Fully implement `IModule->reverse()` for automated artifact cleanup
+- [ ] Further parametrize payloads
+- [ ] Implement at least 3 distinct techniques in each tactic:
+    - [ ] Persistence
+    - [ ] Discovery
+    - [ ] Collection
+    - [ ] Impact
+- [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example)
 
 ## Legal
 
 > **Disclaimer:** This software is for educational purposes and authorized red team engagements only. The authors are not responsible for misuse.
+
+---
+
+Special thanks to [awesome-readme](https://github.com/matiassingers/awesome-readme) for README ideas and to [readme.so](https://readme.so/) for helping me make this one coherent at all :3
