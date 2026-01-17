@@ -54,7 +54,8 @@ You're so cool :3 Head over to the [architecture](docs/ARCHITECTURE.md) and [cod
 
 ## Legal
 
-> **Disclaimer:** This software is for educational purposes and authorized red team engagements only. The authors are not responsible for misuse.
+> [!IMPORTANT]
+> This software is for educational purposes and authorized red team engagements only. The authors are not responsible for misuse.
 
 ---
 
