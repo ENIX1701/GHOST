@@ -5,7 +5,7 @@
 #include <cpr/cpr.h>
 
 std::string Comms::SendPost(const std::string& endpoint, const std::string& payload) {
-    std::string fullUrl = Config::SHADOW_URL + endpoint;
+    std::string fullUrl = SHADOW_URL + endpoint;
 
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},
@@ -23,7 +23,7 @@ std::string Comms::SendPost(const std::string& endpoint, const std::string& payl
 }
 
 bool Comms::UploadFile(const std::string& endpoint, const std::string& filename, const std::string& fileContent) {
-    std::string fullUrl = Config::SHADOW_URL + endpoint;
+    std::string fullUrl = SHADOW_URL + endpoint;
 
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},

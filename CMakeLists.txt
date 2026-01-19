@@ -15,6 +15,17 @@ FetchContent_MakeAvailable(cpr)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
+# === SHADOW CONFIG ===
+if (NOT DEFINED SHADOW_URL)
+    set(SHADOW_URL "127.0.0.1")
+endif()
+if(NOT DEFINED SHADOW_PORT)
+    set(SHADOW_PORT "9999")
+endif()
+
+add_compile_definitions(SHADOW_URL="${SHADOW_URL}")
+add_compile_definitions(SHADOW_PORT=${SHADOW_PORT})
+
 # === GLOBAL FLAGS ===
 option(ENABLE_DEBUG "Enable verbose logging" OFF)
 if(ENABLE_DEBUG)
