@@ -24,7 +24,7 @@ if(NOT DEFINED SHADOW_PORT)
 endif()
 
 add_compile_definitions(SHADOW_URL="${SHADOW_URL}")
-add_compile_definitions(SHADOW_PORT=${SHADOW_PORT})
+add_compile_definitions(SHADOW_PORT="${SHADOW_PORT}")
 
 # === GLOBAL FLAGS ===
 option(ENABLE_DEBUG "Enable verbose logging" OFF)
