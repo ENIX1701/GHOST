@@ -1,6 +1,7 @@
 #include "core/Ghost.hpp"
 #include "utils/Logger.hpp"
 #include "network/Comms.hpp"
+#include "utils/UuidUtils.hpp"
 
 #include <chrono>
 #include <thread>
@@ -30,7 +31,7 @@ Ghost::Ghost() {
     #endif
 
     auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
-    this->uuid = "test-ghost-1"; // TODO: change to uuid again soon-ish
+    this->uuid = UuidUtils::Generate();
 
     this->hostname = SystemUtils::ExecuteCommand("hostname");
     if (!this->hostname.empty() && this->hostname.back() == '\n') {
