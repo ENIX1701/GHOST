@@ -5,7 +5,18 @@
 #include <cpr/cpr.h>
 
 std::string Comms::SendPost(const std::string& endpoint, const std::string& payload) {
-    std::string fullUrl = std::string(SHADOW_URL) + ":" + std::string(SHADOW_PORT) + endpoint;
+    const std::string envUrl = std::getenv("SHADOW_URL");
+    std::string targetUrl = (envUrl.length() > 0) ? envUrl : SHADOW_URL;
+
+    const std::string envPort = std::getenv("SHADOW_PORT");
+    std::string targetPort = (envPort.length() > 0) ? envPort : SHADOW_PORT;
+
+    std::string fullUrl;
+    if (targetPort.length() > 0 && targetPort != "0") {
+        fullUrl = targetUrl + ":" + targetPort + endpoint;      
+    } else {
+        fullUrl = targetUrl + endpoint;
+    }
 
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},
@@ -23,7 +34,18 @@ std::string Comms::SendPost(const std::string& endpoint, const std::string& payl
 }
 
 bool Comms::UploadFile(const std::string& endpoint, const std::string& filename, const std::string& fileContent) {
-    std::string fullUrl = std::string(SHADOW_URL) + ":" + std::string(SHADOW_PORT) + endpoint;
+    const std::string envUrl = std::getenv("SHADOW_URL");
+    std::string targetUrl = (envUrl.length() > 0) ? envUrl : SHADOW_URL;
+
+    const std::string envPort = std::getenv("SHADOW_PORT");
+    std::string targetPort = (envPort.length() > 0) ? envPort : SHADOW_PORT;
+
+    std::string fullUrl;
+    if (targetPort.length() > 0 && targetPort != "0") {
+        fullUrl = targetUrl + ":" + targetPort + endpoint;      
+    } else {
+        fullUrl = targetUrl + endpoint;
+    }
 
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},

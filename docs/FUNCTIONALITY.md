@@ -26,7 +26,7 @@ This method appends a background execution command (like `~/.ghost/GHOST &`) to 
 
 This causes the implant to activate each time the user logs on (and, in turn, survives reboots!).
 
-### 2. Systemd service
+### 2. Systemd service [BACKLOG]
 
 **Flag**: `PERSIST_SERVICE`
 **Target**: Systemd user manager
@@ -37,7 +37,7 @@ This method creates and enables a user-level Systemd service.
 > [!IMPORTANT]
 > The service is located at `~/.config/systemd/user/ghost.service`, set to `Restart=always` and hooks into `default.target`. It also does not require root privileges, since it uses `systemctl --user` :3
 
-### 3. Cron job
+### 3. Cron job [BACKLOG]
 
 **Flag**: `PERSIST_CRON`
 **Target**: User crontab
@@ -93,7 +93,7 @@ The **Exfiltration** module simulates the "unauthorized" transfer of data from a
 
 Exfiltrates data via standard HTTP POST requests. Uses `Comms` wrapper for the implementation. Format of sent data is dependent on the context.
 
-### 2. DNS tunneling (WIP)
+### 2. DNS tunneling (WIP) [BACKLOG]
 
 **Flag**: `EXFIL_DNS`
 **Mitre ATT&CK mapping**: 

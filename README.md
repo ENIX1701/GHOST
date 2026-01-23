@@ -29,7 +29,13 @@ The resulting executable will be located at `build/bin/Ghost`.
 
 ## Deploy
 
-To deploy a GHOST to the system of your choice (that you, of course, are authorized to test), just put the binary created in [build](#build-locally) step onto the Linux host and run it. 
+### AETHER (recommended)
+
+In a standard AETHER deployment, GHOST is built and deployed via the C2 infrastructure. For detailed instructions on that please visit [AETHER's README](https://github.com/ENIX1701/AETHER/blob/main/README.md).
+
+### Manual
+
+To deploy a GHOST to the system of your choice (that you, of course, **are authorized** to test), just put the binary created in [build](#build-locally) step onto the Linux host and run it.
 
 Production builds follow the same instructions as the [local builds](#build-locally), but usually use different flags, often to simulate certain scenarios. For more details on compilation flags visit the [build guide](docs/BUILD.md).
 
