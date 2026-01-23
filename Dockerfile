@@ -7,7 +7,22 @@ WORKDIR /src
 
 COPY CMakeLists.txt .
 
-RUN mkdir -p src && touch src/main.cpp
+RUN mkdir -p src/modules/persistence \
+             src/modules/impact \
+             src/modules/exfiltration \
+             src/core \
+             src/utils \
+             src/network
+
+RUN echo "int main() { return 0; }" > src/main.cpp
+
+RUN touch src/modules/Persistence.cpp \
+          src/modules/Impact.cpp \
+          src/modules/Exfiltration.cpp \
+          src/modules/persistence/RunControl.cpp \
+          src/modules/impact/Encryption.cpp \
+          src/modules/exfiltration/HttpPost.cpp
+
 RUN cmake . && make -j$(nproc) 
 
 COPY . .
