@@ -1,7 +1,7 @@
 # === BUILD STAGE ===
 FROM alpine:edge AS builder
 
-RUN apk add --no-cache g++ git cmake make linux-headers openssl-dev meson
+RUN apk add --no-cache g++ git cmake make linux-headers openssl-dev meson curl-dev
 
 WORKDIR /src
 
@@ -23,7 +23,7 @@ RUN touch src/modules/Persistence.cpp \
           src/modules/impact/Encryption.cpp \
           src/modules/exfiltration/HttpPost.cpp
 
-RUN cmake . && make -j$(nproc) 
+RUN cmake . -DCPR_USE_SYSTEM_CURL=ON -DCPR_BUILD_TESTS=OFF && make -j$(nproc) 
 
 COPY . .
 
@@ -32,7 +32,7 @@ RUN cmake . -DSHADOW_URL=${SHADOW_URL:-127.0.0.1} -DSHADOW_PORT=${SHADOW_PORT:-9
 # === RUNTIME ===
 FROM alpine:edge
 
-RUN apk add --no-cache libstdc++ openssl ca-certificates
+RUN apk add --no-cache libstdc++ openssl ca-certificates libcurl
 
 WORKDIR /app
 
