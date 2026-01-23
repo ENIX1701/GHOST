@@ -5,7 +5,12 @@ RUN apk add --no-cache g++ git cmake make linux-headers openssl-dev meson
 
 WORKDIR /src
 
-COPY . . 
+COPY CMakeLists.txt .
+
+RUN mkdir -p src && touch src/main.cpp
+RUN cmake . && make -j$(nproc) 
+
+COPY . .
 
 RUN cmake . -DSHADOW_URL=${SHADOW_URL:-127.0.0.1} -DSHADOW_PORT=${SHADOW_PORT:-9999} -DENABLE_DEBUG=ON -DBUILD_SHARED_LIBS=OFF && make -j$(nproc)
 
