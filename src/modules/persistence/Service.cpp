@@ -7,14 +7,10 @@ bool ServiceMethod::install() {
     std::string path = SystemUtils::GetUserHome() + "/.config/systemd/user/" + SERVICE_NAME;
 
     FileUtils::WriteFile(path, serviceContent);
-    
-    if (!SystemUtils::ExecuteCommand("systemctl --user enable --now " + SERVICE_NAME)) {
-        return false;
-    }
 
-    return false;
+    return !SystemUtils::ExecuteCommand("systemctl --user enable --now " + SERVICE_NAME).empty();
 }
 
 bool ServiceMethod::remove() {
-    return SystemUtils::ExecuteCommand("systemctl --user disable " + SERVICE_NAME);
+    return !SystemUtils::ExecuteCommand("systemctl --user disable " + SERVICE_NAME).empty();
 }

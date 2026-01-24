@@ -9,7 +9,7 @@ public:
     }
     
     std::string decrypt(const std::string& data, const std::string& key) override {
-        return CryptoUtils::XorEncrypt(data, key);
+        return CryptoUtils::XorEncrypt(data, key);  // symmetric
     }
 };
 
@@ -20,7 +20,7 @@ public:
     }
     
     std::string decrypt(const std::string& data, const std::string& key) override {
-        return "";
+        return CryptoUtils::AesEncrypt(data, key);  // symmetric
     }
 };
 
@@ -31,6 +31,6 @@ public:
     }
     
     std::string decrypt(const std::string& data, const std::string& key) override {
-        return "";
+        return CryptoUtils::ChaChaEncrypt(data, key);  // symmetric
     }
 };

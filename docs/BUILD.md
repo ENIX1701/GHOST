@@ -7,6 +7,7 @@ This builds the agent with the default flags (`DEBUG`, `PERSISTENCE` (RunControl
 ```bash
 mkdir build
 cd build
+
 cmake ..
 make
 ```
@@ -51,6 +52,7 @@ Flags you can control:
 | `ENABLE_IMPACT` | `ON` | Master switch for the *Impact* module |
 | `IMPACT_ENCRYPT` | `ON` | Encrypts files in the home directory |
 | `IMPACT_WIPE` | `OFF` | Wipes drive |
+| `ENCRYPTION_ALGO` | `XOR` | Encryption algorigthm, more details [here](FUNCTIONALITY.md)
 | **Exfiltration** |  |  |
 | `ENABLE_EXFIL` | `ON` | Master switch for the *Exfiltration* module |
 | `EXFIL_HTTP` | `ON` | Exfiltrates data via HTTP POST |

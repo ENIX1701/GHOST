@@ -39,6 +39,18 @@ To deploy a GHOST to the system of your choice (that you, of course, **are autho
 
 Production builds follow the same instructions as the [local builds](#build-locally), but usually use different flags, often to simulate certain scenarios. For more details on compilation flags visit the [build guide](docs/BUILD.md).
 
+## Testing
+
+GHOST includes a CMake test suite to verify it builds correctly with different argument permutations.
+
+```bash
+mkdir build
+cd build
+
+cmake -DENABLE_TESTING=ON ..
+ctest -j4 --output-on-failure   # -j option makes this run in parallel, use as many cores as you want
+```
+
 ## Architecture
 
 GHOST is a modular agent. It's easy to extend. For detailed information on its architecture, please visit the [architecture deep-dive](docs/ARCHITECTURE.md). Check out [code guidelines](docs/CODE_GUIDELINES.md) if you're more interested in implementation details.

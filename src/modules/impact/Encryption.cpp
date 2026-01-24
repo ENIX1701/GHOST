@@ -22,7 +22,7 @@ EncryptionMethod::EncryptionMethod() {
 void EncryptionMethod::applyCrypto(bool encrypt) {
     std::string targetDir = SystemUtils::GetUserHome();
     std::string action = encrypt ? "Encrypting" : "Restoring";
-    LOG_INFO("{} files in {}", targetDir)
+    LOG_INFO("{} files in {}", action, targetDir)
 
     auto files = FileUtils::ListFilesRecursively(targetDir);
     int successCount = 0;

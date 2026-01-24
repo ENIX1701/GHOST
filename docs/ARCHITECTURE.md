@@ -86,6 +86,13 @@ Specific techniques within a module are **Methods**.
 **Interfaces**: `IPersistenceMethod`, `IImpactMethod`, `IExfilMethod`
 **Responsibility**: Implements the actual logic for a specific technique (for example editing `.bashrc` or encrypting files)
 
+## Strategy pattern
+
+Some methods (like `Encryption`) delegate specific logi to *Strategies* to allow for finer granularity (swapping encryption algorithms without changing the method logic, etc.).
+
+**Interfaces**: `IEncryptionStrategy`
+**Responsibility**: Implements interchangable algorithms or behaviors for a *Method*
+
 ## Build system
 
 GHOST uses [`CMake`](../CMakeLists.txt) to selectively compile features. This reduces binary size, avoids triggering detection with unused features and changes the signature of the implant.
@@ -174,9 +181,79 @@ if(ENABLE_PERSISTENCE)
 endif()
 ```
 
-### Add a completely new Module
+### Example: adding a completely new Module
 
 Follow the instructions outlined [above](#example-adding-a-new-persistence-method-just-pretend-runcontrol-is-not-already-done-zzz), but with the following steps:
 1. Create a header for the class in `include/modules/`. Make sure it extends `IModule`.
 2. Add it to the `Ghost` constructor like you would with a *Method*.
 3. Add the corresponding feature flag in `CMakeLists.txt`. You can copy an already existing section and adjust as needed. Make sure it's easily extendable (for the future you :3).
+
+### Example: adding an encryption strategy (again, please act like XOR encryption isn't already implemented...)
+
+**1. Define the strategy class**
+
+Edit `include/modules/impact/EncryptionStrategies.hpp`. Create a class that inherits from `IEncryptionStrategy` and implements its methods (`encrypt` and `decrypt` for the moment).
+
+```C++
+// keep existing includes and classes
+
+class ChaChaEncryptionStrategy : public IEncryptionStrategy {
+public:
+    std::string encrypt(const std::string& data, const std::string& key) override {
+        return CryptoUtils::ChaChaEncrypt(data, key);
+    }
+    
+    std::string decrypt(const std::string& data, const std::string& key) override {
+        return CryptoUtils::ChaChaEncrypt(data, key);   // ChaCha20 is symmetric, just like XOR :)
+    }
+};
+```
+
+**2. Register the strategy**
+
+Modify `src/modules/impact/Encryption.cpp` to use the new strategy.
+
+To do that, go to that file and locate the `EncryptionMethod::EncryptionMethod()` constructor. Then, add an `elif` block with your algorightm tag (`ALGO_CHACHA` in this case).
+
+```C++
+EncryptionMethod::EncryptionMethod() {
+    #if defined(ALGO_AES)
+        strategy = std::make_unique<AesEncryptionStrategy>();
+        LOG_INFO("Encryption initialized with AES strategy")
+    #elif defined(ALGO_CHACHA)      // <- here :3
+        strategy = std::make_unique<ChaChaEncryptionStrategy>();
+        LOG_INFO("Encryption initialized with CHACHA strategy")
+    #else
+        strategy = std::make_unique<XorEncryptionStrategy>();
+        LOG_INFO("Encryption initialized with XOR strategy")
+    #endif
+}
+```
+
+**3. Update the build system**
+
+The last thing you need to do (before thoroughly testing your implementation, of course....) is updating the CMake. 
+
+To do that, navigate to the [`CMakeLists.txt`](../CMakeLists.txt), then find the *Impact* section and add the new macro.
+
+```CMake
+    if(IMPACT_ENCRYPT)
+        add_compile_definitions(METHOD_ENCRYPT)
+
+        if(ENCRYPTION_ALGO STREQUAL "AES")
+            add_compile_definitions(ALGO_AES)
+        elseif(ENCRYPTION_ALGO STREQUAL "CHACHA")   # <- like this :3
+            add_compile_definitions(ALGO_CHACHA)
+        else()
+            add_compile_definitions(ALGO_XOR)
+        endif()
+
+        list(APPEND MODULE_SOURCES src/modules/impact/Encryption.cpp)
+    endif()
+```
+
+Now you can enable your algorithm by specifying the correct flag during the build stage:
+```bash
+cmake -DENCRYPTION_ALGO=CHACHA ..
+make
+```

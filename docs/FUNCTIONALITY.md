@@ -64,11 +64,12 @@ The **Impact** module focuses on simulating the most notorious (and highly preve
 
 **Flag**: `IMPACT_ENCRYPT`
 **Mitre ATT&CK mapping**: [T1486](https://attack.mitre.org/techniques/T1486/)
+**Supported cipher flags**: [`XOR`](https://en.wikipedia.org/wiki/XOR_cipher), [`AES`](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), [`CHACHA`](https://en.wikipedia.org/wiki/Salsa20)
 
 Recursively iterates through user's *home* directory (returned by `SystemUtils::GetUserHome()`) and encrypts files that user has write access to. It then applies the selected encryption algorithm with key set in [`Config.hpp`](../include/core/Config.hpp) by overwriting the files in place.
 
 > [!NOTE]
-> This method is planned to support multiple cyphers (implemented by a single interface), so a *benign* flag may get created somewhere along the way. Also, this means testing AV/EDR solutions in detecting different encryption algorithms.
+> This method supports multiple ciphers via the `IEncryptionStrategy` interface. The algorightm is selected at compile-time via the `ENCRYPTION_ALGO` flag.
 
 ### 2. Wiper
 

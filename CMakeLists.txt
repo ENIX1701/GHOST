@@ -112,3 +112,10 @@ list(APPEND CORE_SOURCES src/modules/Persistence.cpp src/modules/Impact.cpp src/
 add_executable(Ghost ${CORE_SOURCES})
 target_link_libraries(Ghost PRIVATE cpr::cpr nlohmann_json::nlohmann_json)
 target_include_directories(Ghost PRIVATE include)
+
+option(ENABLE_TESTING "Enable build permutation tests" OFF)
+
+if(ENABLE_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
