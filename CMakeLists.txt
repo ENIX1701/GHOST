@@ -9,6 +9,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # === DEPENDENCIES ===
 include(FetchContent)
+
+set(CPR_USE_SYSTEM_CURL ON)
+set(BUILD_SHARED_LIBS OFF)
+
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git GIT_TAG 1.14.1)
 FetchContent_MakeAvailable(cpr)
 
