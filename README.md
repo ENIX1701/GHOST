@@ -53,6 +53,7 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
     - [ ] Collection
     - [ ] Impact
 - [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example)
+- [ ] Threat-actor inspired testing scenarios
 
 ## Contributing
 

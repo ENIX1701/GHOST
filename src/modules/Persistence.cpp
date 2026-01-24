@@ -45,5 +45,8 @@ bool Persistence::execute(const std::string& args) {
     return anySuccess;
 }
 
-// TODO
-void Persistence::restore() {}
+void Persistence::restore() {
+    for (auto& method : methods) {
+        method->remove();
+    }
+}

@@ -30,7 +30,7 @@ This causes the implant to activate each time the user logs on (and, in turn, su
 
 **Flag**: `PERSIST_SERVICE`
 **Target**: Systemd user manager
-**Mitre ATT&CK mapping**: 
+**Mitre ATT&CK mapping**: [T1053.006](https://attack.mitre.org/techniques/T1053/006/)
 
 This method creates and enables a user-level Systemd service.
 
@@ -41,7 +41,7 @@ This method creates and enables a user-level Systemd service.
 
 **Flag**: `PERSIST_CRON`
 **Target**: User crontab
-**Mitre ATT&CK mapping**: 
+**Mitre ATT&CK mapping**: [T1053.003](https://attack.mitre.org/techniques/T1053/003/)
 
 This method adds a scheduled task to the current user's crontab.
 
@@ -63,7 +63,7 @@ The **Impact** module focuses on simulating the most notorious (and highly preve
 ### 1. Encryption
 
 **Flag**: `IMPACT_ENCRYPT`
-**Mitre ATT&CK mapping**: 
+**Mitre ATT&CK mapping**: [T1486](https://attack.mitre.org/techniques/T1486/)
 
 Recursively iterates through user's *home* directory (returned by `SystemUtils::GetUserHome()`) and encrypts files that user has write access to. It then applies the selected encryption algorithm with key set in [`Config.hpp`](../include/core/Config.hpp) by overwriting the files in place.
 
@@ -73,7 +73,7 @@ Recursively iterates through user's *home* directory (returned by `SystemUtils::
 ### 2. Wiper
 
 **Flag**: `IMPACT_WIPE`
-**Mitre ATT&CK mapping**: 
+**Mitre ATT&CK mapping**: [T1561.001](https://attack.mitre.org/techniques/T1561/001/)
 
 Simulates a wiper. It wipes your files. Everything's getting destroyed. No going back.
 
@@ -89,14 +89,14 @@ The **Exfiltration** module simulates the "unauthorized" transfer of data from a
 ### 1. HTTP post
 
 **Flag**: `EXFIL_HTTP`
-**Mitre ATT&CK mapping**: 
+**Mitre ATT&CK mapping**: [T1041](https://attack.mitre.org/techniques/T1041/)
 
 Exfiltrates data via standard HTTP POST requests. Uses `Comms` wrapper for the implementation. Format of sent data is dependent on the context.
 
-### 2. DNS tunneling (WIP) [BACKLOG]
+### 2. DNS tunneling (stub) [BACKLOG]
 
 **Flag**: `EXFIL_DNS`
-**Mitre ATT&CK mapping**: 
+**Mitre ATT&CK mapping**: [T1048.003](https://attack.mitre.org/techniques/T1048/003/)
 
 > [!IMPORTANT]
 > This is a stub. It would be really cool if it got implemented, but until it is, nothing's set in stone. It may or may not get purged in the future.

