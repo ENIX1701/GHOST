@@ -57,3 +57,28 @@ Flags you can control:
 | `ENABLE_EXFIL` | `ON` | Master switch for the *Exfiltration* module |
 | `EXFIL_HTTP` | `ON` | Exfiltrates data via HTTP POST |
 | `EXFIL_DNS` | `OFF` | Exfiltrates data via DNS |
+
+### Impact severity
+
+To prevent accidental damage during testing (and development...), GHOST contains the `IMPACT_LEVEL` build flag. This controls the scope and targets of most modules to ensure benign behavior locally, while potentially simulating actual destructive behavior in sandboxed EDR/AV tests.
+
+#### `TEST` (default)
+
+The safe mode. Boring and predictable.
+
+**Persistence:** `~/.ghost_rc` instead of real shell configs  
+**Impact:** Encrypts and decrypts a single dummy file (`~/.ghost_test`)  
+
+#### `USER`
+
+Destructive, but contained to typical user-mode mechanisms and data.
+
+**Persistence:** User-level configs specified [here](FUNCTIONALITY.md#1-run-control-rc-files)  
+**Impact:** Contained within current user's home directory  
+
+#### `SYSTEM`
+
+Oof...
+
+**Persistence:** Same as in [`USER`](#user) for now  
+**Impact:** Targets system directories. Can potentially completely wipe a system and make it unusable (and potentially unrecoverable!)  

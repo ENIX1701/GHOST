@@ -1,12 +1,6 @@
 #pragma once
 #include <string>
 
-enum class ImpactLevel {
-    Test,
-    User,
-    System
-};
-
 namespace Config {
     constexpr int DEFAULT_SLEEP_SEC = 5;
     constexpr int DEFAULT_JITTER_PERCENT = 10;
@@ -16,6 +10,5 @@ namespace Config {
 
     std::string GetShadowUrl();
     std::string GetShadowPort();
-    ImpactLevel GetImpactLevel();
     std::string GetUserAgent();
 };

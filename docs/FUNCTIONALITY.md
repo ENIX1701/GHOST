@@ -15,9 +15,9 @@ The **Persistence** module ensures the implant restarts automatically after the 
 
 ### 1. Run control (RC files)
 
-**Flag**: `PERSIST_RUNCONTROL`
-**Target**: Linux shell configuration files
-**Mitre ATT&CK mapping**: [T1546.004](https://attack.mitre.org/techniques/T1546/004/)
+**Flag**: `PERSIST_RUNCONTROL`  
+**Target**: Linux shell configuration files  
+**Mitre ATT&CK mapping**: [T1546.004](https://attack.mitre.org/techniques/T1546/004/)  
 
 This method appends a background execution command (like `~/.ghost/GHOST &`) to the user's shell initialization files.
 
@@ -26,22 +26,22 @@ This method appends a background execution command (like `~/.ghost/GHOST &`) to 
 
 This causes the implant to activate each time the user logs on (and, in turn, survives reboots!).
 
-### 2. Systemd service [BACKLOG]
+### 2. Systemd service
 
-**Flag**: `PERSIST_SERVICE`
-**Target**: Systemd user manager
-**Mitre ATT&CK mapping**: [T1053.006](https://attack.mitre.org/techniques/T1053/006/)
+**Flag**: `PERSIST_SERVICE`  
+**Target**: Systemd user manager  
+**Mitre ATT&CK mapping**: [T1053.006](https://attack.mitre.org/techniques/T1053/006/)  
 
 This method creates and enables a user-level Systemd service.
 
 > [!IMPORTANT]
 > The service is located at `~/.config/systemd/user/ghost.service`, set to `Restart=always` and hooks into `default.target`. It also does not require root privileges, since it uses `systemctl --user` :3
 
-### 3. Cron job [BACKLOG]
+### 3. Cron job
 
-**Flag**: `PERSIST_CRON`
-**Target**: User crontab
-**Mitre ATT&CK mapping**: [T1053.003](https://attack.mitre.org/techniques/T1053/003/)
+**Flag**: `PERSIST_CRON`  
+**Target**: User crontab  
+**Mitre ATT&CK mapping**: [T1053.003](https://attack.mitre.org/techniques/T1053/003/)  
 
 This method adds a scheduled task to the current user's crontab.
 
@@ -62,9 +62,9 @@ The **Impact** module focuses on simulating the most notorious (and highly preve
 
 ### 1. Encryption
 
-**Flag**: `IMPACT_ENCRYPT`
-**Mitre ATT&CK mapping**: [T1486](https://attack.mitre.org/techniques/T1486/)
-**Supported cipher flags**: [`XOR`](https://en.wikipedia.org/wiki/XOR_cipher), [`AES`](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), [`CHACHA`](https://en.wikipedia.org/wiki/Salsa20)
+**Flag**: `IMPACT_ENCRYPT`  
+**Mitre ATT&CK mapping**: [T1486](https://attack.mitre.org/techniques/T1486/)  
+**Supported cipher flags**: [`XOR`](https://en.wikipedia.org/wiki/XOR_cipher), [`AES`](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) (stub), [`CHACHA`](https://en.wikipedia.org/wiki/Salsa20) (stub)  
 
 Recursively iterates through user's *home* directory (returned by `SystemUtils::GetUserHome()`) and encrypts files that user has write access to. It then applies the selected encryption algorithm with key set in [`Config.hpp`](../include/core/Config.hpp) by overwriting the files in place.
 
@@ -73,8 +73,8 @@ Recursively iterates through user's *home* directory (returned by `SystemUtils::
 
 ### 2. Wiper
 
-**Flag**: `IMPACT_WIPE`
-**Mitre ATT&CK mapping**: [T1561.001](https://attack.mitre.org/techniques/T1561/001/)
+**Flag**: `IMPACT_WIPE`  
+**Mitre ATT&CK mapping**: [T1561.001](https://attack.mitre.org/techniques/T1561/001/)  
 
 Simulates a wiper. It wipes your files. Everything's getting destroyed. No going back.
 
@@ -89,15 +89,15 @@ The **Exfiltration** module simulates the "unauthorized" transfer of data from a
 
 ### 1. HTTP post
 
-**Flag**: `EXFIL_HTTP`
-**Mitre ATT&CK mapping**: [T1041](https://attack.mitre.org/techniques/T1041/)
+**Flag**: `EXFIL_HTTP`  
+**Mitre ATT&CK mapping**: [T1041](https://attack.mitre.org/techniques/T1041/)  
 
 Exfiltrates data via standard HTTP POST requests. Uses `Comms` wrapper for the implementation. Format of sent data is dependent on the context.
 
 ### 2. DNS tunneling (stub) [BACKLOG]
 
-**Flag**: `EXFIL_DNS`
-**Mitre ATT&CK mapping**: [T1048.003](https://attack.mitre.org/techniques/T1048/003/)
+**Flag**: `EXFIL_DNS`  
+**Mitre ATT&CK mapping**: [T1048.003](https://attack.mitre.org/techniques/T1048/003/)  
 
 > [!IMPORTANT]
 > This is a stub. It would be really cool if it got implemented, but until it is, nothing's set in stone. It may or may not get purged in the future.
