@@ -22,7 +22,7 @@ The **Persistence** module ensures the implant restarts automatically after the 
 This method appends a background execution command (like `~/.ghost/GHOST &`) to the user's shell initialization files.
 
 > [!NOTE]
-> Targeted files are: `.bashrc`, `.bash_profile`, `.profile`, `.zshrc`
+> Targeted files are `~/.ghost_rc` for `TEST` impact level and `.bashrc`, `.bash_profile`, `.profile`, `.zshrc` for others
 
 This causes the implant to activate each time the user logs on (and, in turn, survives reboots!).
 
