@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(GHOST VERSION 1.0)
+project(GHOST VERSION 1.1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,6 +29,19 @@ endif()
 
 add_compile_definitions(SHADOW_URL="${SHADOW_URL}")
 add_compile_definitions(SHADOW_PORT="${SHADOW_PORT}")
+
+# === IMPACT SEVERITY ===
+set(IMPACT_LEVEL "TEST" CACHE STRING "Impact severity: TEST (safe), USER, SYSTEM")
+if(IMPACT_LEVEL STREQUAL "TEST")
+    add_compile_definitions(IMPACT_LEVEL_TEST)
+elseif(IMPACT_LEVEL STREQUAL "USER")
+    add_compile_definitions(IMPACT_LEVEL_USER)
+elseif(IMPACT_LEVEL STREQUAL "SYSTEM")
+    add_compile_definitions(IMPACT_LEVEL_SYSTEM)
+else()
+    message(WARNING "Unknown IMPACT_LEVEL, defaulting to TEST")
+    add_compile_definitions(IMPACT_LEVEL_TEST)
+endif()
 
 # === GLOBAL FLAGS ===
 option(ENABLE_DEBUG "Enable verbose logging" OFF)

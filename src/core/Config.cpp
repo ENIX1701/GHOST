@@ -1,4 +1,5 @@
 #include "core/Config.hpp"
+#include "utils/Obfuscation.hpp"
 #include <cstdlib>
 
 namespace Config {
@@ -18,5 +19,19 @@ namespace Config {
         }
 
         return SHADOW_PORT;
+    }
+
+    ImpactLevel GetImpactLevel() {
+        #ifdef IMPACT_LEVEL_SYSTEM
+            return ImpactLevel::System;
+        #elif defined(IMPACT_LEVEL_USER)
+            return ImpactLevel::User;
+        #else
+            return ImpactLevel::Test;
+        #endif
+    }
+
+    std::string GetUserAgent() {
+        return OBFL("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
     }
 }

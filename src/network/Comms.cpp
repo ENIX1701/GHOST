@@ -24,7 +24,7 @@ std::string Comms::SendPost(const std::string& endpoint, const std::string& payl
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},
         cpr::Body{payload},
-        cpr::Header{{"Content-Type", "application/json"}, {"User-Agent", Config::USER_AGENT}},
+        cpr::Header{{"Content-Type", "application/json"}, {"User-Agent", Config::GetUserAgent()}},
         cpr::VerifySsl{false}
     );
 
@@ -42,7 +42,7 @@ bool Comms::UploadFile(const std::string& endpoint, const std::string& filename,
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},
         cpr::Multipart{{"file", cpr::File(filename, fileContent)}},
-        cpr::Header{{"User-Agent", Config::USER_AGENT}},
+        cpr::Header{{"User-Agent", Config::GetUserAgent()}},
         cpr::VerifySsl{false}
     );
 
