@@ -122,6 +122,23 @@ if(ENABLE_EXFIL)
     endif()
 endif()
 
+# ==========================================
+# MODULE: GATHERING
+# ==========================================
+option(ENABLE_GATHERING "Enable Gathering Manager" ON)
+if(ENABLE_GATHERING)
+    add_compile_definitions(FEATURE_GATHERING)
+
+    option(GATHER_SYSINFO "Method: System Information" ON)
+
+    if(GATHER_SYSINFO)
+        add_compile_definitions(METHOD_SYSINFO)
+        list(APPEND MODULE_SOURCES src/modules/gathering/SystemInfo.cpp)
+    endif()
+
+    list(APPEND MODULE_SOURCES src/modules/Gathering.cpp)
+endif()
+
 # === TARGET ===
 file(GLOB_RECURSE CORE_SOURCES "src/core/*.cpp" "src/utils/*.cpp" "src/network/*.cpp" "src/main.cpp")
 list(APPEND CORE_SOURCES src/modules/Persistence.cpp src/modules/Impact.cpp src/modules/Exfiltration.cpp ${MODULE_SOURCES})

