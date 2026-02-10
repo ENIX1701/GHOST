@@ -7,7 +7,7 @@ bool FileUtils::WriteFile(const std::string& path, const std::string& content) {
     if(!out) return false;
 
     out << content;
-    
+
     return true;
 }
 
@@ -16,7 +16,7 @@ bool FileUtils::AppendToFile(const std::string& path, const std::string& content
     if(!out) return false;
 
     out << "\n" << content;
-    
+
     return true;
 }
 
@@ -26,7 +26,7 @@ bool FileUtils::RemoveFromFile(const std::string& path, const std::string& conte
     if (!in) {
         return false;
     }
-    
+
     std::string line;
     while (std::getline(in, line)) {
         if (line.find(content) == std::string::npos) {
@@ -43,7 +43,7 @@ bool FileUtils::RemoveFromFile(const std::string& path, const std::string& conte
     for (const auto& line : lines) {
         out << line << "\n";
     }
-    
+
     return true;
 }
 
