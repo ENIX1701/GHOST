@@ -49,13 +49,28 @@ if(ENABLE_DEBUG)
     add_compile_definitions(DEBUG_MODE)
 endif()
 
+# TODO: add cleanup mode flag that will, well, clean up after the simulation (trigger Scenario->restore() or smth like that in a new run)
+# === SCENARIO MODE ===
+set(SCENARIO_MODE "NONE" CACHE STRING "Ready to use scenarios simulating most popular attack types: RANSOMWARE, ESPIONAGE")
+if (SCENARIO_MODE STREQUAL "RANSOMWARE")
+    add_compile_definitions(SCENARIO_RANSOMWARE)
+    set(ENABLE_PERSISTENCE ON)
+    set(ENABLE_EXFIL ON)
+    set(ENABLE_IMPACT ON)   # default is encrypt; think about setting everything explicitly here
+elseif(SCENARIO_MODE STREQUAL "ESPIONAGE")
+    add_compile_definitions(SCENARIO_ESPIONAGE)
+    set(ENABLE_PERSISTENCE ON)
+    set(ENABLE_GATHER ON)
+    set(ENABLE_EXFIL ON)
+endif()
+
 # ==========================================
 # MODULE: PERSISTENCE
 # ==========================================
 option(ENABLE_PERSISTENCE "Enable Persistence Manager" ON)
 if(ENABLE_PERSISTENCE)
     add_compile_definitions(FEATURE_PERSISTENCE)
-    
+
     option(PERSIST_RUNCONTROL "Method: BashRC/ZshRC" ON)
     option(PERSIST_SERVICE    "Method: Systemd Service" OFF)
     option(PERSIST_CRON       "Method: Cron Job" OFF)
@@ -125,8 +140,8 @@ endif()
 # ==========================================
 # MODULE: GATHERING
 # ==========================================
-option(ENABLE_GATHERING "Enable Gathering Manager" ON)
-if(ENABLE_GATHERING)
+option(ENABLE_GATHER "Enable Gathering Manager" ON)
+if(ENABLE_GATHER)
     add_compile_definitions(FEATURE_GATHERING)
 
     option(GATHER_SYSINFO "Method: System Information" ON)

