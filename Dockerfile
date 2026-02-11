@@ -37,7 +37,7 @@ ENV CTEST_OUTPUT_ON_FAILURE=1
 RUN ctest -j$(nproc)
 
 # === RUNTIME ===
-FROM alpine:edge as runtime
+FROM alpine:edge AS runtime
 
 RUN apk add --no-cache libstdc++ openssl ca-certificates libcurl
 
