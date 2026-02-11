@@ -32,8 +32,12 @@ COPY . .
 
 RUN cmake . -DSHADOW_URL=${SHADOW_URL:-127.0.0.1} -DSHADOW_PORT=${SHADOW_PORT:-9999} -DENABLE_DEBUG=ON -DBUILD_SHARED_LIBS=OFF && make -j$(nproc)
 
+FROM builder AS test
+ENV CTEST_OUTPUT_ON_FAILURE=1
+RUN ctest -j$(nproc)
+
 # === RUNTIME ===
-FROM alpine:edge
+FROM alpine:edge as runtime
 
 RUN apk add --no-cache libstdc++ openssl ca-certificates libcurl
 
