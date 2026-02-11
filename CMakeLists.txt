@@ -52,6 +52,11 @@ endif()
 # TODO: add cleanup mode flag that will, well, clean up after the simulation (trigger Scenario->restore() or smth like that in a new run)
 # === SCENARIO MODE ===
 set(SCENARIO_MODE "NONE" CACHE STRING "Ready to use scenarios simulating most popular attack types: RANSOMWARE, ESPIONAGE")
+
+if(NOT SCENARIO_MODE STREQUAL "NONE")
+    add_compile_definitions(SCENARIO_MODE)
+endif()
+
 if (SCENARIO_MODE STREQUAL "RANSOMWARE")
     add_compile_definitions(SCENARIO_RANSOMWARE)
     set(ENABLE_PERSISTENCE ON)

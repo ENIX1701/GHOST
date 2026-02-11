@@ -75,7 +75,7 @@ void Ghost::runScenario(ScenarioType type) {
             break;
         #endif
         default:
-            LOG_WARNING("No valid scenario detected")
+            LOG_ERROR("No valid scenario detected")
             break;
     }
 }

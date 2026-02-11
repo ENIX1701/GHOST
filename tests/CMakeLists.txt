@@ -26,13 +26,13 @@ endfunction()
 # PERMUTATIONS
 add_build_test("All_Features" "")
 
-add_build_test("Minimal" "-DENABLE_DEBUG=OFF -DENABLE_PERSISTENCE=OFF -DENABLE_IMPACT=OFF -DENABLE_EXFIL=OFF")
+add_build_test("Minimal" "-DENABLE_DEBUG=OFF -DENABLE_PERSISTENCE=OFF -DENABLE_IMPACT=OFF -DENABLE_EXFIL=OFF -DENABLE_GATHER=OFF")
 
 foreach(RC IN ITEMS ON OFF)
     foreach(SVC IN ITEMS ON OFF)
         foreach(CRON IN ITEMS ON OFF)
             set(NAME "Persist_RC-${RC}_SVC-${SVC}_CRON-${CRON}")
-            set(FLAG "-DENABLE_PERSISTENCE=ON -DPERSIST_RUNCONTROL=${RC} -DPERSIST_SERVICE=${SVC} -DPERSIST_CRON=${CRON}")
+            set(FLAGS "-DENABLE_PERSISTENCE=ON -DPERSIST_RUNCONTROL=${RC} -DPERSIST_SERVICE=${SVC} -DPERSIST_CRON=${CRON}")
             add_build_test("${NAME}" "${FLAGS}")
         endforeach()
     endforeach()
@@ -44,5 +44,12 @@ endforeach()
 
 add_build_test("Impact_Wipe" "-DENABLE_IMPACT=ON -DIMPACT_ENCRYPT=OFF -DIMPACT_WIPE=ON")
 
+foreach(LEVEL IN ITEMS TEST USER SYSTEM)
+    add_build_test("Impact_Level_${LEVEL}" "-DIMPACT_LEVEL=${LEVEL}")
+endforeach()
+
 add_build_test("Exfil_HTTP" "-DENABLE_EXFIL=ON -DEXFIL_HTTP=ON -DEXFIL_DNS=OFF")
 add_build_test("Exfil_DNS" "-DENABLE_EXFIL=ON -DEXFIL_HTTP=OFF -DEXFIL_DNS=ON")
+
+add_build_test("Scenario_Ransomware" "-DSCENARIO_MODE=RANSOWARE")
+add_build_test("Scenario_Espionage" "-DSCENARIO_MODE=ESPIONAGE")
