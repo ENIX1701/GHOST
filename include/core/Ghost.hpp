@@ -37,6 +37,14 @@ private:
 public:
     Ghost();
 
+    #ifdef SCENARIO_MODE
+    enum class ScenarioType {
+        RANSOMWARE,
+        ESPIONAGE
+    };
+    void runScenario(ScenarioType type);
+    #endif
+
     void run();
     bool reg();
     bool persist();

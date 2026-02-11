@@ -69,6 +69,23 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
 - [ ] Impact severity level configuration
 - [ ] Basic EDR/AV evasion by XOR string obfuscation
 
+### Scenario mode scratchpad
+
+Scenario mode would be one of the most valuable things in AETHER. It would not only help experienced red team operators carry out security assesments and exercises, but also open the door to less technically inclined to measure the performance of implemented security measures! It will (ideally) work as follows:
+1. User picks out a threat actor they'd want to simulate
+2. They configure the accepted impact level (described [here](docs/BUILD.md#impact-severity))
+3. They run the simulation manually (CHARON prepares the command, they put it into the terminal on tested machine)
+4. The implant is configured to mimic the kill chain of selected malware with configured impact level (if you want the real deal you'd select USER or SYSTEM)
+5. (Also please note that the implant doesn't do privilege escalation currently, and it's not something too high up on the priorities list, so ymmv with how closely the simulation will be to the real thing)
+
+Implementation-wise, it will probably look something like this:
+- central scenario manager, triggered inside of `Ghost.cpp`
+- scenario manager only present when compiled with some `SCENARIO_MODE` or similar flag (compile time ftw)
+- uses the currently implemented (told you the refactor would be worth it!) `IModule` interface with modules map to store the entire killchain
+- easiest scenarios to implement and test on are the typical ransomware and espionage with auto cleanup and stuff :3
+- [ ] don't forget to create documentation with for scenarios with overview, "noise" level and such!!! (I will forget anyways ughhh)
+- another important thing: scenario mode should automatically override required modules (I think that'd make the most sense - if you want a scenario, you choose the impact level and get all the functionality, which means no debugging why stuff doesn't work!)
+
 ## Contributing
 
 You're so cool :3 Head over to the [architecture](docs/ARCHITECTURE.md) and [code guidelines](docs/CODE_GUIDELINES.md) sections to get started! There are instructions on how to implement new modules and methods. When you're done, create a pull request and we'll polish your work and merge it into the main branch!

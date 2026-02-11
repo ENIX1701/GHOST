@@ -50,6 +50,24 @@ Ghost::Ghost() {
     this->pendingResults = json::array();
 }
 
+// TODO: instead of this make a map of scenarios (like with modules) and just scenario->run() or smth like that
+void Ghost::runScenario(ScenarioType type) {
+    LOG_INFO("[SCENARIO MODE] Initializing...")
+
+    switch (type) {
+        #ifdef SCENARIO_RANSOMWARE
+        case ScenarioType::RANSOMWARE:
+            break;
+        #elif defined(SCENARIO_ESPIONAGE)
+        case ScenarioType::ESPIONAGE:
+            break;
+        #endif
+        default:
+            LOG_WARNING("No valid scenario detected")
+            break;
+    }
+}
+
 bool Ghost::reg() {
     LOG_INFO("Trying to register GHOST [{}]", this->uuid)
 
