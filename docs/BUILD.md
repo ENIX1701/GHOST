@@ -102,4 +102,7 @@ Gets enabled if setting any scenario with `-DSCENARIO_MODE=<name>` flag. Availab
 |`ESPIONAGE`|Low noise. Gathers host info (sensitive data included!) and exfiltrates it over the C2 channel. Good starting point for simulating [infostealer malware](https://en.wikipedia.org/wiki/Infostealer) or [APT actors](https://www.ibm.com/think/topics/advanced-persistent-threats) :3 |
 |`WIPER`|Extreme noise. Destroys all files and self-terminates, leaving the system in an unusable state. Used to test EDR detection and reaction speed.|
 |`INFOSTEALER`|Steals the info >:3c|
-|`APT`|Stealhy and hands-on-keyboard'y...|
+|`APT`|Stealhy and hands-on-keyboard'y... Also - very generic|
+|`APT29`|Long-term espionage. Gathers SSH keys, stablishes RunControl persistence and deploys an undetectable 4-hour beacon interval.|
+|`APT44 (SANDWORM)`|Pure chaos. Establishes a CRON job to survive reboots and immediately wipes the system. Nothing will survive.|
+|`APT38 (LAZARUS)`|Two stage extortion. Silent harvesting of system data and SSH keys only to drop a screaming ransomware to mask the espionage.|
