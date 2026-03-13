@@ -109,7 +109,6 @@ void Ghost::runScenario(ScenarioType type) {
             this->run();
             break;
         #endif
-        
         #ifdef SCENARIO_APT29
         case ScenarioType::APT29:
             LOG_INFO("[SCENARIO] Executing APT29")
@@ -119,6 +118,29 @@ void Ghost::runScenario(ScenarioType type) {
             modules["EXFIL"]->execute();
 
             this->run();
+            break;
+        #endif
+        #ifdef SCENARIO_APT44
+        case ScenarioType::APT44:
+            LOG_INFO("[SCENARIO] Executing APT44 (Sandworm)")
+
+            modules["PERSIST"]->execute();
+            modules["IMPACT"]->execute();
+
+            cleanup();
+            destroy();
+            break;
+        #endif
+        #ifdef SCENARIO_APT38
+        case ScenarioType::APT38:
+            LOG_INFO("[SCENARIO] Executing APT38 (Lazarus)")
+
+            modules["GATHER"]->execute();
+            modules["EXFIL"]->execute();
+            modules["IMPACT"]->execute();
+
+            cleanup();
+            destroy();
             break;
         #endif
         default:

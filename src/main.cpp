@@ -18,6 +18,10 @@ int main() {
         ghost.runScenario(Ghost::ScenarioType::APT);
     #elif defined(SCENARIO_APT29)
         ghost.runScenario(Ghost::ScenarioType::APT29);
+    #elif defined(SCENARIO_APT44)
+        ghost.runScenario(Ghost::ScenarioType::APT44);
+    #elif defined(SCENARIO_APT38)
+        ghost.runScenario(Ghost::ScenarioType::APT38);
     #endif
 
     #ifndef SCENARIO_MODE
