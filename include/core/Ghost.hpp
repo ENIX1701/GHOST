@@ -40,7 +40,8 @@ public:
     #ifdef SCENARIO_MODE
     enum class ScenarioType {
         RANSOMWARE,
-        ESPIONAGE
+        ESPIONAGE,
+        WIPER
     };
     void runScenario(ScenarioType type);
     #endif

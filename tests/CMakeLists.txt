@@ -53,3 +53,4 @@ add_build_test("Exfil_DNS" "-DENABLE_EXFIL=ON -DEXFIL_HTTP=OFF -DEXFIL_DNS=ON")
 
 add_build_test("Scenario_Ransomware" "-DSCENARIO_MODE=RANSOWARE")
 add_build_test("Scenario_Espionage" "-DSCENARIO_MODE=ESPIONAGE")
+add_build_test("Scenario_Wiper" "-DSCENARIO_MODE=WIPER")

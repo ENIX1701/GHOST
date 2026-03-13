@@ -10,10 +10,13 @@ int main() {
         ghost.runScenario(Ghost::ScenarioType::RANSOMWARE);
     #elif defined(SCENARIO_ESPIONAGE)
         ghost.runScenario(Ghost::ScenarioType::ESPIONAGE);
+    #elif defined(SCENARIO_WIPER)
+        ghost.runScenario(Ghost::ScenarioType::WIPER);
     #endif
 
-    // TODO: make this run only in non-scenario builds
+    #ifndef SCENARIO_MODE
     ghost.run();
+    #endif
 
     return 0;
 }

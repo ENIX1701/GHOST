@@ -88,3 +88,16 @@ Oof...
 
 **Persistence:** Same as in [`USER`](#user) for now  
 **Impact:** Targets system directories. Can potentially completely wipe a system and make it unusable (and potentially unrecoverable!)  
+
+## Scenario mode
+
+Gets enabled if setting any scenario with `-DSCENARIO_MODE=<name>` flag. Available scenarios are listed in the table below :3
+
+> [!NOTE]
+> All scenarios use the built-in methods, which respect severity level flags. If you want to run a scenario, but are afraid of damaging your system, check out the [*TEST* severity](#test-default).
+
+| Option | Description |
+|-|-|
+|`RANSOMWARE`|Very noisy. Exfiltrates data and encrypts files.|
+|`ESPIONAGE`|Low noise. Gathers host info (sensitive data included!) and exfiltrates it over the C2 channel. Good starting point for simulating [infostealer malware](https://en.wikipedia.org/wiki/Infostealer) or [APT actors](https://www.ibm.com/think/topics/advanced-persistent-threats) :3 |
+|`WIPER`|Extreme noise. Destroys all files and self-terminates, leaving the system in an unusable state. Used to test EDR detection and reaction speed.|
