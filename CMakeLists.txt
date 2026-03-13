@@ -88,6 +88,10 @@ elseif(SCENARIO_MODE STREQUAL "INFOSTEALER")
     set(ENABLE_EXFIL ON)
 elseif(SCENARIO_MODE STREQUAL "APT")
     add_compile_definitions(SCENARIO_APT)
+
+    add_compile_definitions(GHOST_SLEEP_SEC=60)
+    add_compile_definitions(GHOST_JITTER_PERCENT=500)
+
     set(ENABLE_PERSISTENCE ON)
     set(PERSIST_RUNCONTROL ON)
     set(PERSIST_SERVICE OFF)
