@@ -100,6 +100,15 @@ void Ghost::runScenario(ScenarioType type) {
             cleanup();
             destroy();
         #endif
+        #ifdef SCENARIO_APT
+        case ScenarioType::APT:
+            LOG_INFO("[SCENARIO] Executing APT")
+
+            modules["PERSIST"]->execute();
+
+            this->run();
+            break;
+        #endif
         default:
             LOG_ERROR("No valid scenario detected")
             break;

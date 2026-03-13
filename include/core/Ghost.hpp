@@ -42,7 +42,8 @@ public:
         RANSOMWARE,
         ESPIONAGE,
         WIPER,
-        INFOSTEALER
+        INFOSTEALER,
+        APT,
     };
     void runScenario(ScenarioType type);
     #endif
