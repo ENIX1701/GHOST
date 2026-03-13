@@ -19,13 +19,13 @@ Gathering::Gathering() {
     methods.push_back(std::make_unique<SystemInfoMethod>());
     #endif
     #ifdef METHOD_SSH
-    methods.push_back(std::make_unique<Ssh>());
+    methods.push_back(std::make_unique<SshMethod>());
     #endif
     #ifdef METHOD_ETCPASSWD
-    methods.push_back(std::make_unique<EtcPasswd>());
+    methods.push_back(std::make_unique<EtcPasswdMethod>());
     #endif
     #ifdef METHOD_ETCSHADOW
-    methods.push_back(std::make_unique<EtcShadow>());
+    methods.push_back(std::make_unique<EtcShadowMethod>());
     #endif
 }
 

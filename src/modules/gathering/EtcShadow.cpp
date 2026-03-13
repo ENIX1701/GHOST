@@ -1,4 +1,5 @@
 #include "modules/gathering/EtcShadow.hpp"
+#include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
 #include "utils/Logger.hpp"
 #include "network/Comms.hpp"
