@@ -43,7 +43,10 @@ public:
         ESPIONAGE,
         WIPER,
         INFOSTEALER,
-        APT,
+        APT, // generic
+        APT29,
+        APT44,  // sandworm
+        APT38   // lazarus
     };
     void runScenario(ScenarioType type);
     #endif

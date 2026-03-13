@@ -109,6 +109,18 @@ void Ghost::runScenario(ScenarioType type) {
             this->run();
             break;
         #endif
+        
+        #ifdef SCENARIO_APT29
+        case ScenarioType::APT29:
+            LOG_INFO("[SCENARIO] Executing APT29")
+
+            modules["PERSIST"]->execute();
+            modules["GATHER"]->execute();
+            modules["EXFIL"]->execute();
+
+            this->run();
+            break;
+        #endif
         default:
             LOG_ERROR("No valid scenario detected")
             break;

