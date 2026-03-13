@@ -101,3 +101,4 @@ Gets enabled if setting any scenario with `-DSCENARIO_MODE=<name>` flag. Availab
 |`RANSOMWARE`|Very noisy. Exfiltrates data and encrypts files.|
 |`ESPIONAGE`|Low noise. Gathers host info (sensitive data included!) and exfiltrates it over the C2 channel. Good starting point for simulating [infostealer malware](https://en.wikipedia.org/wiki/Infostealer) or [APT actors](https://www.ibm.com/think/topics/advanced-persistent-threats) :3 |
 |`WIPER`|Extreme noise. Destroys all files and self-terminates, leaving the system in an unusable state. Used to test EDR detection and reaction speed.|
+|`INFOSTEALER`|Steals the info >:3c|

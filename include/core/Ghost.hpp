@@ -41,7 +41,8 @@ public:
     enum class ScenarioType {
         RANSOMWARE,
         ESPIONAGE,
-        WIPER
+        WIPER,
+        INFOSTEALER
     };
     void runScenario(ScenarioType type);
     #endif

