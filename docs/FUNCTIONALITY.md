@@ -83,6 +83,46 @@ Simulates a wiper. It wipes your files. Everything's getting destroyed. No going
 
 ---
 
+## Gathering
+
+The **Gathering** module focuses on colleting sensitive information, credentials and system configurations from the compromised host before exfiltration.
+
+### 1. Local credentials
+
+**Flag**: `GATHER_ETCSHADOW`  
+**Target**: `/etc/shadow`  
+**Mitre ATT&CK mapping**: [T1003.008](https://attack.mitre.org/techniques/T1003/008/)  
+
+Tries reading `/etc/shadow` (which is a standard Linux file storing password hashes) and uploading its contents to SHADOW (the C2 of [AETHER](https://github.com/ENIX1701/AETHER)).
+
+### 2. Local account information
+
+**Flag**: `GATHER_ETCPASSWD`  
+**Target**: `/etc/passwd`  
+**Mitre ATT&CK mapping**: [T1087](https://attack.mitre.org/techniques/T1087/001/) and [T1003.008](https://attack.mitre.org/techniques/T1003/008/)  
+
+Works exactly like [`/etc/shadow`](#1-local-credentials), but for `/etc/passwd`!
+
+### 3. SSH keys and configs
+
+**Flag**: `GATHER_SSH`  
+**Target**: files contained inside `~/.ssh` directory  
+**Mitre ATT&CK mapping**: [T1552.004](https://attack.mitre.org/techniques/T1552/004/)  
+
+Recursively searches current user's `~/.ssh` directory and extracts valuable data, namely: private keys and configs. It also gets public keys, but those can be easily generated with private ones, so they may get omitted in the future version.
+
+### 4. System information
+
+**Flag**: `GATHER_SYSINFO`  
+**Mitre ATT&CK mapping**: [T1082](https://attack.mitre.org/techniques/T1082/)  
+
+Executes basic enumeration commands (currently `uname -r` and `uptime -p`, but more are on the way!) to gather host system details.
+
+> [!NOTE]
+> The `GATHER_ETC*` modules should be used in conjunction. If trying to (with authorization!) crack the passwords (using for example [*John the Ripper*](https://en.wikipedia.org/wiki/John_the_Ripper)), data from both files is needed!
+
+---
+
 ## Exfiltration
 
 The **Exfiltration** module simulates the "unauthorized" transfer of data from a compromised host to the C2 server (SHADOW in this case).

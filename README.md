@@ -64,7 +64,7 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
     - [ ] Discovery
     - [x] Collection (gathering)
     - [ ] Impact
-- [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example)
+- [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example) -> superseded by scenario mode currently
 - [ ] Threat-actor inspired testing scenarios -> "scenario mode" being implemented right now :3
 - [x] Impact severity level configuration
 - [ ] Basic EDR/AV evasion by XOR string obfuscation

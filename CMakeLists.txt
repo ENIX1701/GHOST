@@ -150,10 +150,28 @@ if(ENABLE_GATHER)
     add_compile_definitions(FEATURE_GATHERING)
 
     option(GATHER_SYSINFO "Method: System Information" ON)
+    option(GATHER_SSH "Method: SSH" OFF)
+    option(GATHER_ETCPASSWD "Method: /etc/passwd" OFF)
+    option(GATHER_ETCSHADOW "Method: /etc/shadow" OFF)
 
     if(GATHER_SYSINFO)
         add_compile_definitions(METHOD_SYSINFO)
         list(APPEND MODULE_SOURCES src/modules/gathering/SystemInfo.cpp)
+    endif()
+
+    if(GATHER_SSH)
+        add_compile_definitions(METHOD_SSH)
+        list(APPEND MODULE_SOURCES src/modules/gathering/Ssh.cpp)
+    endif()
+
+    if(GATHER_ETCPASSWD)
+        add_compile_definitions(METHOD_ETCPASSWD)
+        list(APPEND MODULE_SOURCES src/modules/gathering/EtcPasswd.cpp)
+    endif()
+
+    if(GATHER_ETCSHADOW)
+        add_compile_definitions(METHOD_ETCSHADOW)
+        list(APPEND MODULE_SOURCES src/modules/gathering/EtcShadow.cpp)
     endif()
 
     list(APPEND MODULE_SOURCES src/modules/Gathering.cpp)
