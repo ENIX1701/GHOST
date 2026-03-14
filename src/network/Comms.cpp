@@ -36,12 +36,12 @@ std::string Comms::SendPost(const std::string& endpoint, const std::string& payl
     }
 }
 
-bool Comms::UploadFile(const std::string& endpoint, const std::string& filename, const std::string& fileContent) {
+bool Comms::UploadFile(const std::string& endpoint, const std::string& type, const std::string& fileContent) {
     std::string fullUrl = BuildFullUrl(endpoint);
 
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},
-        cpr::Multipart{{"file", cpr::File(filename, fileContent)}},
+        cpr::Multipart{{"file", cpr::File(type + ".txt", fileContent)}},
         cpr::Header{{"User-Agent", Config::GetUserAgent()}},
         cpr::VerifySsl{false}
     );

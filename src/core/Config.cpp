@@ -3,6 +3,16 @@
 #include <cstdlib>
 
 namespace Config {
+    static std::string ghostId = "";
+
+    void SetGhostId(const std::string& id) {
+        ghostId = id;
+    }
+
+    std::string GetGhostId() {
+        return ghostId;
+    }
+
     std::string GetShadowUrl() {
         const char* envUrl = std::getenv("SHADOW_URL");
         if (envUrl && std::string(envUrl).length() > 0) {

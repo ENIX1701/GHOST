@@ -1,4 +1,5 @@
 #include "core/Ghost.hpp"
+#include "core/Config.hpp"
 #include "utils/Logger.hpp"
 #include "network/Comms.hpp"
 #include "utils/UuidUtils.hpp"
@@ -38,6 +39,8 @@ Ghost::Ghost() {
 
     auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
     this->uuid = UuidUtils::Generate();
+
+    Config::SetGhostId(this->uuid);
 
     this->hostname = SystemUtils::ExecuteCommand("hostname");
     if (!this->hostname.empty() && this->hostname.back() == '\n') {

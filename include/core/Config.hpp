@@ -16,6 +16,10 @@ namespace Config {
 
     // add safeguard for now
     const std::string ENCRYPTION_KEY = ""; // yes i've accidentally encrypted my WSL
+    // TODO: parametrize encryption key
+
+    void SetGhostId(const std::string& id);
+    std::string GetGhostId();
 
     std::string GetShadowUrl();
     std::string GetShadowPort();

