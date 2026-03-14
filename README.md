@@ -58,16 +58,14 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
 ## Roadmap
 
 - [ ] Fully implement `IModule->reverse()` for automated artifact cleanup
-- [ ] Further parametrize payloads
-- [ ] Implement at least 3 distinct techniques in each tactic:
+- [x] Further parametrize payloads
+- [x] Implement at least 3 distinct techniques in each tactic:
     - [x] Persistence
-    - [ ] Discovery
     - [x] Collection (gathering)
-    - [ ] Impact
-- [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example) -> superseded by scenario mode currently
-- [ ] Threat-actor inspired testing scenarios -> "scenario mode" being implemented right now :3
+- [ ] Track tactics as *Mitre ATT&CK* codes (as build parameters for example) -> superseded by scenario mode currently -> some scenarios mapped to distinct APT groups, as per Mitre and others -> I can also do this by setting T codes as aliases in CMakeLists.txt (like with APTs and their codenames)
+- [x] Threat-actor inspired testing scenarios -> "scenario mode" being implemented right now :3 -> done as a concept, now it's a matter of adding more of them!
 - [x] Impact severity level configuration
-- [ ] Basic EDR/AV evasion by XOR string obfuscation
+- [x] Basic EDR/AV evasion by XOR string obfuscation
 
 ### Scenario mode scratchpad
 
@@ -79,12 +77,14 @@ Scenario mode would be one of the most valuable things in AETHER. It would not o
 5. (Also please note that the implant doesn't do privilege escalation currently, and it's not something too high up on the priorities list, so ymmv with how closely the simulation will be to the real thing)
 
 Implementation-wise, it will probably look something like this:
-- central scenario manager, triggered inside of `Ghost.cpp`
-- scenario manager only present when compiled with some `SCENARIO_MODE` or similar flag (compile time ftw)
-- uses the currently implemented (told you the refactor would be worth it!) `IModule` interface with modules map to store the entire killchain
-- easiest scenarios to implement and test on are the typical ransomware and espionage with auto cleanup and stuff :3
-- [ ] don't forget to create documentation with for scenarios with overview, "noise" level and such!!! (I will forget anyways ughhh)
-- another important thing: scenario mode should automatically override required modules (I think that'd make the most sense - if you want a scenario, you choose the impact level and get all the functionality, which means no debugging why stuff doesn't work!)
+- [x] central scenario manager, triggered inside of `Ghost.cpp`
+- [x] scenario manager only present when compiled with some `SCENARIO_MODE` or similar flag (compile time ftw)
+- [x] uses the currently implemented (told you the refactor would be worth it!) `IModule` interface with modules map to store the entire killchain -> kind of, it really just uses the modules that are already present and doesn't require registering as a module itself!
+- [x] easiest scenarios to implement and test on are the typical ransomware and espionage with auto cleanup and stuff :3
+- [x] don't forget to create documentation with for scenarios with overview, "noise" level and such!!! (I will forget anyways ughhh)
+- [x] another important thing: scenario mode should automatically override required modules (I think that'd make the most sense - if you want a scenario, you choose the impact level and get all the functionality, which means no debugging why stuff doesn't work!)
+
+seems like it's basically fully implemented? I'll test it out and see if everything's fine. crossing my fingers it is >w<
 
 ## Contributing
 
