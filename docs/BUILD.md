@@ -57,7 +57,7 @@ Flags you can control:
 | `ENABLE_EXFIL` | `ON` | Master switch for the *Exfiltration* module |
 | `EXFIL_HTTP` | `ON` | Exfiltrates data via HTTP POST |
 | `EXFIL_DNS` | `OFF` | Exfiltrates data via DNS |
-| **Gathering** |  |  | // ??
+| **Gathering** |  |  |
 | `ENABLE_GATHER` | `ON` | Master switch for the *Gathering* module |
 | `GATHER_SYSINFO` | `ON` | Gathers basic system info |
 | `GATHER_SSH` | `OFF` | Extracts SSH keys and configs |

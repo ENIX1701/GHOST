@@ -5,12 +5,12 @@
 #include "utils/Logger.hpp"
 #include "utils/DataVault.hpp"
 
-#ifdef EXFIL_HTTP
+#ifdef METHOD_HTTP
     #include "modules/exfiltration/HttpPost.hpp"
 #endif
 
 Exfiltration::Exfiltration() {
-    #ifdef EXFIL_HTTP
+    #ifdef METHOD_HTTP
     methods.push_back(std::make_unique<HttpPostMethod>()); 
     #endif
 }
