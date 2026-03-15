@@ -48,7 +48,7 @@ mkdir build
 cd build
 
 cmake -DENABLE_TESTING=ON ..
-ctest -j4 --output-on-failure   # -j option makes this run in parallel, use as many cores as you want
+ctest -j4 --output-on-failure   # -j option makes this run in parallel, use as many cores as you want; -j$(nproc) for all cores >:3c
 ```
 
 ## Architecture

@@ -28,6 +28,7 @@ add_build_test("All_Features" "")
 
 add_build_test("Minimal" "-DENABLE_DEBUG=OFF -DENABLE_PERSISTENCE=OFF -DENABLE_IMPACT=OFF -DENABLE_EXFIL=OFF -DENABLE_GATHER=OFF")
 
+# Persistence matrix
 foreach(RC IN ITEMS ON OFF)
     foreach(RC_ONCE IN ITEMS ON OFF)
         foreach(SVC IN ITEMS ON OFF)
@@ -40,20 +41,31 @@ foreach(RC IN ITEMS ON OFF)
     endforeach()
 endforeach()
 
-foreach(ALGO IN ITEMS XOR AES CHACHA)
-    add_build_test("Impact_Encrypt_${ALGO}" "-DENABLE_IMPACT=ON -DIMPACT_ENCRYPT=ON -DENCRYPTION_ALGO=${ALGO}")
-endforeach()
-
-add_build_test("Impact_Wipe" "-DENABLE_IMPACT=ON -DIMPACT_ENCRYPT=OFF -DIMPACT_WIPE=ON")
-
+# Impact matrix
 foreach(LEVEL IN ITEMS TEST USER SYSTEM)
-    add_build_test("Impact_Level_${LEVEL}" "-DIMPACT_LEVEL=${LEVEL}")
+    foreach(ALGO IN ITEMS XOR AES CHACHA)
+        set(NAME "Impact_Encrypt_${ALGO}_Level_${LEVEL}")
+        set(FLAGS "-DENABLE_IMPACT=ON -DIMPACT_ENCRYPT=ON -DENCRYPTION_ALGO=${ALGO} -DIMPACT_LEVEL=${LEVEL}")
+        add_build_test("${NAME}" "${FLAGS}")
+    endforeach()
+
+    set(WIPE_NAME "Impact_Wipe_Level_${LEVEL}")
+    set(WIPE_FLAGS "-DENABLE_IMPACT=ON -DIMPACT_ENCRYPT=OFF -DIMPACT_WIPE=ON -DIMPACT_LEVEL=${LEVEL}")
+    add_build_test("${WIPE_NAME}" "${WIPE_FLAGS}")
 endforeach()
 
+# Exfiltration permutations
 add_build_test("Exfil_HTTP" "-DENABLE_EXFIL=ON -DEXFIL_HTTP=ON -DEXFIL_DNS=OFF")
 add_build_test("Exfil_DNS" "-DENABLE_EXFIL=ON -DEXFIL_HTTP=OFF -DEXFIL_DNS=ON")
 
-add_build_test("Scenario_Ransomware" "-DSCENARIO_MODE=RANSOWARE")
+# Gathering permutations
+add_build_test("Gather_Sysinfo" "-DENABLE_GATHER=ON -DMETHOD_SYSINFO=ON")
+add_build_test("Gather_SSH" "-DENABLE_GATHER=ON -DMETHOD_SSH=ON")
+add_build_test("Gather_EtcPasswd" "-DENABLE_GATHER=ON -DMETHOD_ETCPASSWD=ON")
+add_build_test("Gather_EtcShadow" "-DENABLE_GATHER=ON -DMETHOD_ETCSHADOW=ON")
+
+# Scenarios
+add_build_test("Scenario_Ransomware" "-DSCENARIO_MODE=RANSOMWARE")
 add_build_test("Scenario_Espionage" "-DSCENARIO_MODE=ESPIONAGE")
 add_build_test("Scenario_Wiper" "-DSCENARIO_MODE=WIPER")
 add_build_test("Scenario_Infostealer" "-DSCENARIO_MODE=INFOSTEALER")
