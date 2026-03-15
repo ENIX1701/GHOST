@@ -245,22 +245,22 @@ if(ENABLE_GATHER)
     option(GATHER_ETCSHADOW "Method: /etc/shadow" OFF)
 
     if(GATHER_SYSINFO)
-        add_compile_definitions(GATHER_SYSINFO)
+        add_compile_definitions(METHOD_SYSINFO)
         list(APPEND MODULE_SOURCES src/modules/gathering/SystemInfo.cpp)
     endif()
 
     if(GATHER_SSH)
-        add_compile_definitions(GATHER_SSH)
+        add_compile_definitions(METHOD_SSH)
         list(APPEND MODULE_SOURCES src/modules/gathering/Ssh.cpp)
     endif()
 
     if(GATHER_ETCPASSWD)
-        add_compile_definitions(GATHER_ETCPASSWD)
+        add_compile_definitions(METHOD_ETCPASSWD)
         list(APPEND MODULE_SOURCES src/modules/gathering/EtcPasswd.cpp)
     endif()
 
     if(GATHER_ETCSHADOW)
-        add_compile_definitions(GATHER_ETCSHADOW)
+        add_compile_definitions(METHOD_ETCSHADOW)
         list(APPEND MODULE_SOURCES src/modules/gathering/EtcShadow.cpp)
     endif()
 
