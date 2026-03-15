@@ -1,30 +1,30 @@
 #include "modules/Gathering.hpp"
 #include "utils/Logger.hpp"
 
-#ifdef METHOD_SYSINFO
+#ifdef GATHER_SYSINFO
     #include "modules/gathering/SystemInfo.hpp"
 #endif
-#ifdef METHOD_SSH
+#ifdef GATHER_SSH
     #include "modules/gathering/Ssh.hpp"
 #endif
-#ifdef METHOD_ETCPASSWD
+#ifdef GATHER_ETCPASSWD
     #include "modules/gathering/EtcPasswd.hpp"
 #endif
-#ifdef METHOD_ETCSHADOW
+#ifdef GATHER_ETCSHADOW
     #include "modules/gathering/EtcShadow.hpp"
 #endif
 
 Gathering::Gathering() {
-    #ifdef METHOD_SYSINFO
+    #ifdef GATHER_SYSINFO
     methods.push_back(std::make_unique<SystemInfoMethod>());
     #endif
-    #ifdef METHOD_SSH
+    #ifdef GATHER_SSH
     methods.push_back(std::make_unique<SshMethod>());
     #endif
-    #ifdef METHOD_ETCPASSWD
+    #ifdef GATHER_ETCPASSWD
     methods.push_back(std::make_unique<EtcPasswdMethod>());
     #endif
-    #ifdef METHOD_ETCSHADOW
+    #ifdef GATHER_ETCSHADOW
     methods.push_back(std::make_unique<EtcShadowMethod>());
     #endif
 }

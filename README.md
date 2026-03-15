@@ -57,7 +57,7 @@ GHOST is a modular agent. It's easy to extend. For detailed information on its a
 
 ## Roadmap
 
-- [ ] Fully implement `IModule->reverse()` for automated artifact cleanup
+- [ ] Fully implement `IModule->reverse()` for automated artifact cleanup -> ditch for now; real simulations on backupable targets are more valuable than trying to reverse everything on a prod system -> that's what the `TEST` mode is for 
 - [x] Further parametrize payloads
 - [x] Implement at least 3 distinct techniques in each tactic:
     - [x] Persistence
