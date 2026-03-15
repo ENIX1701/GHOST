@@ -41,7 +41,7 @@ bool Comms::UploadFile(const std::string& endpoint, const std::string& type, con
 
     cpr::Response r = cpr::Post(
         cpr::Url{fullUrl},
-        cpr::Multipart{{"file", cpr::File(type + ".txt", fileContent)}},
+        cpr::Multipart{{"file", cpr::Buffer{fileContent.begin(), fileContent.end(), type + ".txt"}}},
         cpr::Header{{"User-Agent", Config::GetUserAgent()}},
         cpr::VerifySsl{false}
     );

